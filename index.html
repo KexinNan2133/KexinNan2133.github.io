@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday</title>
+    <link rel="stylesheet" href="../e04/style.css">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+</head>
+<body>
+    <!--用户登录页面 包含两个页面（flex）-->
+    <div class="flex">
+        <!--页面1 祝福语显示-->
+        <div class="user-page">
+            <!--祝福语-->
+            <p class="zhuyu1">生日快乐</p>
+            <p class="zhuyu2">HAPPY BIRTHDAY</p>
+        </div>
+        <!--页面2 制作登陆页面form-->
+        <div class="sign-form">
+            <audio src="../e04/msc/canon.mp3" 
+            controls autoplay loop style="width: 0px;height: 0px;"></audio>
+            <source src="../e04/msc/canon.mp3" type="audio/ogg">
+            <source src="../e04/msc/canon.mp3" type="audio/mpeg">
+            <!--P1-->
+            <div>
+                <!--P1.1-->
+                <div style="margin-top: 50px; margin-left: 100px; color: aliceblue;">
+                    <h1>登 录</h1>
+                </div>
+                <!--p1.2-->
+                <div class="mar-l">
+                    <form>
+                        <span>
+                            <i class="fa fa-user"></i>
+                            <input type="text" placeholder="账号">
+                        </span><br>
+                        <span style="line-height: 30px;">
+                            <i class="fa fa-lock"></i>
+                            <input type="text" placeholder="密码">
+                        </span><br>
+                    </form>
+                </div>
+                <a href="../e04/newpage.html" class="butt">登 录</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+body{
+    width: 1500px;
+    height: 800px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 9px;
+    background-color: rgb(138, 195, 245);
+    background-image: linear-gradient(to bottom right,rgb(232, 244, 247),rgb(81, 173, 227));
+    animation: donghua 3s infinite;
+}
+.flex{
+    display: flex;
+}
+.coloum{
+    flex-direction: column;
+}
+.header{
+    height: 200px;
+    width: 100px;
+   
+}
+.main{
+    display: flex;
+}
+.Left-top{
+    width:880px;
+    height: 150px;
+    line-height: 3px;
+    border: 3px solid aliceblue;
+    margin-top: 20px;
+    color: #fff;
+    letter-spacing: 13PX;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 32px;
+    padding-left: 20px;
+    box-shadow: 0 0 15px #fff;
+    text-shadow: 10px 10px 10px #222;
+    background-image: url(../e04/image/天空4.jpg);
+}
+.Left-in{
+    width: 900px;
+    height: 500px;
+    border: 2px solid aliceblue;
+    margin-top: 50px;
+    box-shadow: 0 0 15px #fff;
+    background-image: url(../e04/image/天空4.jpg);
+    background-size: 900px 500px;
+}
+.Right-page{
+    width: 450px;
+    height: 700px;
+    border: 2px solid aliceblue;
+    margin-left: 80px;
+    margin-top: 50px;
+    box-shadow: 0 0 15px #fff;
+    background-image: url(../e04/image/天空5.jpg);
+    background-size: 450px 700px;
+}
+.main .Left-in div{
+    width: 500px;
+    height: 400px;
+    margin: 40px 170px;
+    border: 9px solid aliceblue;
+    text-align: center;
+    padding-top: 20px;
+    overflow: auto;
+    line-height: 30px;
+    font-family: "宋体";
+    font-size: 20px;
+    color: #fff;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+@keyframes donghua {
+    50%{
+        border: 2px solid rgb(169, 164, 164);
+    }
+}
