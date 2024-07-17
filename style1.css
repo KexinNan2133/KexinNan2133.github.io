@@ -4,7 +4,6 @@ body{
     border: 2px solid rgb(255, 255, 255);
     border-radius: 9px;
     background-color: rgb(138, 195, 245);
-    background-image: linear-gradient(to bottom right,rgb(232, 244, 247),rgb(81, 173, 227));
     animation: donghua 3s infinite;
 }
 .flex{
@@ -149,6 +148,6 @@ a:hover {
 
 @keyframes donghua {
     50%{
-        border: 2px solid rgb(169, 164, 164);
+        border: 3px solid rgb(169, 164, 164);
     }
 }
