@@ -34,7 +34,7 @@ body{
     padding-left: 20px;
     box-shadow: 0 0 15px #fff;
     text-shadow: 10px 10px 10px #222;
-    background-image: url(https://kexinnan2133.github.io/image/天空4.jpg);
+    background-image: url(../e04/image/天空4.jpg);
 }
 .Left-in{
     width: 900px;
@@ -42,7 +42,7 @@ body{
     border: 2px solid aliceblue;
     margin-top: 50px;
     box-shadow: 0 0 15px #fff;
-    background-image: url(https://kexinnan2133.github.io/image/天空4.jpg);
+    background-image: url(../e04/image/天空4.jpg);
     background-size: 900px 500px;
 }
 .Right-page{
@@ -52,8 +52,9 @@ body{
     margin-left: 80px;
     margin-top: 50px;
     box-shadow: 0 0 15px #fff;
-    background-image: url(https://kexinnan2133.github.io/image/天空5.jpg);
+    background-image: url(../e04/image/天空5.jpg);
     background-size: 450px 700px;
+    display: flex;
 }
 .main .Left-in div{
     width: 500px;
@@ -69,8 +70,82 @@ body{
     color: #fff;
 }
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 0px;
 }
+header{
+    border: 5px solid aliceblue;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    width: 100px;
+    height: 620px;
+    margin-top: 15px;
+    margin-left: 26px;
+    box-shadow: 0 0 15px #000;
+    font-family: 'Times New Roman', Times, serif;
+    color: #fff;
+}
+.container{
+    width: 90px;
+    height: 610px;
+    margin: 5px;
+}
+.logo{
+    width: 80px;
+    height: 50px;
+    padding-left: 5px;
+    border: 2px solid #fff;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    letter-spacing: 15px;
+}
+.row{
+    width: 85px;
+    height: auto;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.daohang{
+    border: 2px solid #fff;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    margin-top: 50px;
+    margin-left: 20px;
+    font-size: 28px;
+}
+.neirong{
+    border: 3px solid aliceblue;
+    width: 300px;
+    height: 500px;
+    margin-top: 80px;
+    margin-left: 10px;
+    color: #fff;
+    box-shadow: 0 0 10px #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.lianjq{
+    position: relative;
+    width: 290px;
+    height: 500px;
+    margin: 10px 4px;
+    border: 2px solid #fff;
+}
+.tupian{
+    width: 280px;
+    height:300px;
+    margin: 5px;
+}
+
+a{
+    color: #fff;
+
+}
+a:hover {
+    font-size: 150%;
+}
+
 
 @keyframes donghua {
     50%{
