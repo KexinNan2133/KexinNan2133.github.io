@@ -15,7 +15,6 @@ body{
 .header{
     height: 200px;
     width: 100px;
-   
 }
 .main{
     display: flex;
@@ -34,6 +33,17 @@ body{
     box-shadow: 0 0 15px #fff;
     text-shadow: 10px 10px 10px #222;
     background-image: url(https://kexinnan2133.github.io/image/天空4.jpg);
+}
+#logo{
+    border-radius: 50px;
+    box-shadow: 0 0 20px;
+    transition: all 3.0s;
+}
+#logo:hover{
+    box-shadow: 0 0 10px #1a1818;
+    -webkit-box-shadow: 0 0 19px #ffffff;
+    transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
 }
 .Left-in{
     width: 900px;
