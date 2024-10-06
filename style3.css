@@ -18,6 +18,7 @@ display: flex;
     height: 790px;
 }
 .D-l{
+    display: flex
     width: 590px;
     height: 90px;
     border: 1px solid aliceblue;
