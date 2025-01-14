@@ -37,12 +37,22 @@ display: flex;
     animation: D-H1 5s infinite alternate ease-in-out;
 }
 .N-r{
+    display: flex;
+    flex-direction: column;
     width: 590px;
     height: 680px;
     border: 1px solid rgb(245, 241, 241);
     border-radius: 10px;
     margin-top: 5px;
     background-color: rgb(87, 123, 145);
+}
+.R-z{
+    width: 560px;
+    height: 570px;
+    border: 1px solid aliceblue;
+    border-radius: 10px;
+    margin: 20px;
+    overflow: auto;
 }
 .M-d{
     flex-direction: column;
@@ -100,8 +110,8 @@ display: flex;
 }
 @keyframes D-H1 {
     0%{transform: rotate(0deg);}
-    25%{transform: rotate(900deg);}
-    50%{transform: rotate(1800deg);}
-    75%{transform: rotate(2700deg);}
-    100%{transform: rotate(3600deg);}
+    25%{transform: rotate(90deg);}
+    50%{transform: rotate(180deg);}
+    75%{transform: rotate(270deg);}
+    100%{transform: rotate(360deg);}
 }
