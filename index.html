@@ -97,10 +97,6 @@
             .container, .middle-section {
                 padding: 10px;
             }
-
-            .scroll-content {
-                max-height: 200px; /* 在平板上调整高度 */
-            }
         }
 
         @media (max-width: 480px) {
@@ -110,10 +106,6 @@
             }
             header h1 {
                 font-size: 20px;
-            }
-
-            .scroll-content {
-                max-height: 150px; /* 在手机上调整高度 */
             }
         }
     </style>
@@ -130,7 +122,18 @@
         <p>Feel free to reach out and connect with us. Let's make music together!</p>
         <p>Check out our <a href="#latest-tracks">latest tracks</a> and updates.</p>
     </div>
-    
+
+    <div class="middle-section" id="latest-tracks">
+        <h2>Latest Tracks</h2>
+        <!-- 滚动内容 -->
+        <div class="scroll-content">
+            <p>Here you can list your latest music tracks or updates. This section will have a scroll effect.</p>
+            <p>More content to fill the space and test the scrolling functionality.</p>
+            <p>Even more content to ensure the scroll effect is noticeable.</p>
+            <p>Keep adding more content here to test the scroll effect.</p>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2025 Kimi Music. All rights reserved.</p>
     </footer>
