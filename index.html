@@ -3,107 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KexinNan Music</title>
-    <link rel="stylesheet" href="https://kexinnan2133.github.io/style3.css">
+    <title>Kimi Music</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #3498db;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #3498db;
+        }
+        p {
+            line-height: 1.6;
+        }
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: transform 0.3s ease, color 0.3s ease; /* 添加过渡效果 */
+        }
+        a:hover {
+            text-decoration: underline;
+            transform: scale(1.1); /* 鼠标悬停时放大 */
+            color: #2980b9; /* 鼠标悬停时颜色变化 */
+        }
+    </style>
 </head>
 <body>
-    <!--container1-->
-    <div class="container1">
-        <!--左侧内容区-->
-        <div class="L-d">
-            <!--左侧顶部栏-->
-            <div class="D-l">
-                <div>
-                    <img src="https://kexinnan2133.github.io/image/头像.jpg" 
-                    id="logo"
-                    alt="smiley">
-                </div>
-                <div>
-                    <p style="color: aliceblue;font-size: 30px;margin-left: 20px;">
-                        KexinNan Music
-                    </p>
-                </div>
-            </div>
-            <!--左侧内容栏-->
-            <div class="N-r">
-                <div>
-                    <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        欢迎来到KexinNan Music !
-                    </p><hr>
-                </div>
-                <div class="R-z">
-                    <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        更新日志：
-                    </p>
-                    <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        2024-12-25 : 上传《董小姐》吉他前奏
-                    </p><hr>
-                    <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        2025-01-02 : 上传《安和桥》吉他节选
-                    </p><hr>
-                    <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        2025-01-10 : 上传《青 花》吉他弹唱
-                    </p><hr>
-                     <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                        2025-01-15 : 上传《春娇与志明》吉他节选
-                    </p><hr>
-                </div>
-            </div>
-        </div>
-        <!--中部内容区-->
-        <div class="M-d">
-            <div class="T-g">
-                <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                    1.《董小姐》
-                </p>
-                <audio controls style="margin-left: 30px; border: 3px solid aliceblue; border-radius: 10px;">
-                    <source src="https://kexinnan2133.github.io/董小姐.mp3" type="audio/mpeg">
-                    <source src="https://kexinnan2133.github.io/董小姐.mp3" type="audio/ogg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                    2.《安和桥》
-                </p>
-                <audio controls style="margin-left: 30px; border: 3px solid aliceblue; border-radius: 10px;">
-                    <source src="https://kexinnan2133.github.io/安和桥.mp3" type="audio/mpeg">
-                    <source src="https://kexinnan2133.github.io/安和桥.mp3" type="audio/ogg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                    3.《青 花》
-                </p>
-                <audio controls style="margin-left: 30px; border: 3px solid aliceblue; border-radius: 10px;">
-                    <source src="https://kexinnan2133.github.io/青花.mp3" type="audio/mpeg">
-                    <source src="https://kexinnan2133.github.io/青花.mp3" type="audio/ogg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p style="font-size: 20px; color: aliceblue; padding-left: 20px;">
-                    3.《春娇与志明》
-                </p>
-                <audio controls style="margin-left: 30px; border: 3px solid aliceblue; border-radius: 10px;">
-                    <source src="https://kexinnan2133.github.io/春娇与志明.mp3" type="audio/mpeg">
-                    <source src="https://kexinnan2133.github.io/春娇与志明.mp3" type="audio/ogg">
-                </audio>
-            </div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-        </div>
-        <!--右侧内容区-->
-        <div class="R-d">
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-            <div class="T-g"></div>
-        </div>
+    <header>
+        <img src="https://kexinnan2133.github.io/image/头像.jpg" alt="Kimi Music">
+        <h1>KexinNan Music</h1>
+    </header>
+
+    <div class="container">
+        <h1>Welcome to KexinNan Music</h1>
+        <p>This is a place where music meets creativity. Discover new tracks, explore different genres, and catch the latest music trends.</p>
+        <p>Feel free to reach out and connect with us. Let's make music together!</p>
+        <p>Check out our <a href="./kimi-Music.html">latest tracks</a> and updates.</p>
     </div>
-    <!--container2-->
-    <a class="D-b" href="https://kexinnan2133.github.io/newpage.html"> Catch me !</a>
+
+    <footer>
+        <p>&copy; 2025 Kimi Music. All rights reserved.</p>
+    </footer>
 </body>
 </html>
