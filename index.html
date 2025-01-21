@@ -57,7 +57,6 @@
         }
 
         .scroll-content {
-            max-height: 300px; /* 设置最大高度 */
             overflow-y: auto; /* 添加滚动效果 */
             padding: 10px;
         }
@@ -98,6 +97,10 @@
             .container, .middle-section {
                 padding: 10px;
             }
+
+            .scroll-content {
+                max-height: 200px; /* 在平板上调整高度 */
+            }
         }
 
         @media (max-width: 480px) {
@@ -107,6 +110,10 @@
             }
             header h1 {
                 font-size: 20px;
+            }
+
+            .scroll-content {
+                max-height: 150px; /* 在手机上调整高度 */
             }
         }
     </style>
