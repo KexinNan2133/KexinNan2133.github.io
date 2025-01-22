@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KexinNan Music</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 链接外部CSS文件 -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -12,82 +12,25 @@
         <h1>KexinNan Music</h1>
     </header>
 
-    <div class="container1">
-        <!-- 左侧内容区 -->
-        <div class="L-d">
-            <div class="D-l">
-                <img src="https://kexinnan2133.github.io/image/头像.jpg" id="logo" alt="smiley" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid #3498db;">
-                <p style="font-size: 24px; margin-top: 10px;">KexinNan Music</p>
-            </div>
-            <div class="N-r">
-                <p style="font-size: 18px;">欢迎来到KexinNan Music!</p>
-                <hr style="border: 1px solid #fff;">
-                <p style="font-size: 16px;">2024-12-25 : 上传《董小姐》吉他前奏</p>
-                <p style="font-size: 16px;">2025-01-02 : 上传《安和桥》吉他节选</p>
-                <p style="font-size: 16px;">2025-01-10 : 上传《青花》吉他弹唱</p>
-                <p style="font-size: 16px;">2025-01-15 : 上传《春娇与志明》吉他节选</p>
-            </div>
-        </div>
-
-        <!-- 中部内容区 -->
-        <div class="M-d">
-            <div class="T-g">
-                <p>1.《董小姐》</p>
-                <audio controls>
-                    <source src="https://kexinnan2133.github.io/董小姐.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p>2.《安和桥》</p>
-                <audio controls>
-                    <source src="https://kexinnan2133.github.io/安和桥.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p>3.《青花》</p>
-                <audio controls>
-                    <source src="https://kexinnan2133.github.io/青花.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-            <div class="T-g">
-                <p>4.《春娇与志明》</p>
-                <audio controls>
-                    <source src="https://kexinnan2133.github.io/春娇与志明.mp3" type="audio/mpeg">
-                </audio>
-            </div>
-        </div>
-
-        <!-- 右侧内容区 -->
-        <div class="R-d">
-            <h3>推荐音乐</h3>
-            <p style="font-size: 16px;">这里可以展示更多推荐歌曲或评论。</p>
-
-            <!-- 评论留言功能 -->
-            <div class="comments">
-                <h3>评论留言</h3>
-                <form id="comment-form">
-                    <label for="name">姓名：</label>
-                    <input type="text" id="name" name="name" required>
-
-                    <label for="comment">评论：</label>
-                    <textarea id="comment" name="comment" rows="4" required></textarea>
-
-                    <button type="submit">提交评论</button>
-                </form>
-                <div class="comments-list" id="comments-list"></div>
-                <button id="load-more" style="display: none; padding: 10px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    查看更多评论
-                </button>
-            </div>
-        </div>
+    <div class="container">
+        <h1>Welcome to KexinNan Music</h1>
+        <p>This is a place where music meets creativity. Discover new tracks, explore different genres, and catch the latest music trends.</p>
+        <p>Feel free to reach out and connect with us. Let's make music together!</p>
+        <p>Check out our <a href="https://kexinnan2133.github.io/kimi-Music.html">latest tracks</a> and updates.</p>
     </div>
 
-    <a class="D-b" href="https://kexinnan2133.github.io/newpage.html">Catch me!</a>
+    <div class="container comments">
+        <h3>评论留言</h3>
+        <form id="comment-form">
+            <label for="name">姓名：</label>
+            <input type="text" id="name" name="name" required>
+            <label for="comment">评论：</label>
+            <textarea id="comment" name="comment" rows="4" required></textarea>
+            <button type="submit">提交评论</button>
+        </form>
+        <div id="comments-list" class="comments-list"></div>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 Kimi Music. All rights reserved.</p>
-    </footer>
-
-    <script src="scripts.js"></script> <!-- 链接外部JavaScript文件 -->
+    <script src="scripts.js"></script>
 </body>
 </html>
