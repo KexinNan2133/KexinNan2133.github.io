@@ -157,4 +157,9 @@ footer {
     margin-bottom: 10px;
     padding: 5px;
     background-color: #e0e0e0;
-    border-radius
+    border-radius: 5px;
+}
+
+.comments-list .comment .name {
+    font-weight: bold;
+}
