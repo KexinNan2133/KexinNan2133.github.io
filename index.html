@@ -1,31 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guestbook</title>
-    <link rel="stylesheet" href="./style1.css">
+    <title>茶产品过度包装计算</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Guestbook</h1>
-    <form id="guestbook-form">
-        <label for="name"> N a m e :</label>
-        <input type="text" id="name" required>
-        <br><br>
-        <label for="message">Message:</label>
-        <textarea id="message" required placeholder="请留言！" onfocus="this.placeholder=''"></textarea>
-        <br><br>
-        <button type="submit">提交</button>
-    </form>
-    <h2>Messages</h2>
-    <div id="guestbook-entries"></div>
-    <button id="clear-entries">清除留言</button>
-    <div id="password-prompt" style="display: none;">
-        <label for="password">请输入密码:</label>
-        <input type="password" id="password">
-        <button id="submit-password">提交</button>
-    </div>
+    <h1>茶产品过度包装计算</h1>
+    <label for="length">外包装长度（毫米）:</label>
+    <input type="number" id="length" min="0" step="1">
+
+    <label for="width">外包装宽度（毫米）:</label>
+    <input type="number" id="width" min="0" step="1">
+
+    <label for="height">外包装高度（毫米）:</label>
+    <input type="number" id="height" min="0" step="1">
+
+    <button onclick="calculateVolume()">计算外包装容积</button>
+
+    <div class="result" id="volumeResult"></div>
+
+    <script>
+        function calculateVolume() {
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+                alert('请输入有效的数值');
+                return;
+            }
+
+            const volume = length * width * height;
+            document.getElementById('packageVolume').value = volume;
+            document.getElementById('volumeResult').innerHTML = `外包装容积: ${volume.toFixed(2)} 立方毫米`;
+        }
+    </script>
+    <label for="netWeight">茶叶净含量（克）:</label>
+    <input type="number" id="netWeight" min="0" step="0.01">
     
-    <script src="./script.js"></script>
+    <label for="packageVolume">商品销售外包装体积（立方毫米）:</label>
+    <input type="number" id="packageVolume" min="0" step="1">
+    
+    <button onclick="calculate()">计算</button>
+    
+    <div class="result" id="result"></div>
+    
+    <script>
+        function calculate() {
+            const netWeight = parseFloat(document.getElementById('netWeight').value);
+            const packageVolume = parseFloat(document.getElementById('packageVolume').value);
+            
+            if (isNaN(netWeight) || isNaN(packageVolume) || netWeight <= 0 || packageVolume <= 0) {
+                alert('请输入有效的数值');
+                return;
+            }
+            
+            const voidSpace = packageVolume - 13 * 1000 * netWeight;
+            const voidRate = (voidSpace / packageVolume) * 100;
+            
+            let maxVoidRate;
+            if (netWeight <= 1) {
+                maxVoidRate = 85;
+            } else if (netWeight <= 5) {
+                maxVoidRate = 70;
+            } else if (netWeight <= 15) {
+                maxVoidRate = 60;
+            } else if (netWeight <= 30) {
+                maxVoidRate = 50;
+            } else if (netWeight <= 50) {
+                maxVoidRate = 40;
+            } else {
+                maxVoidRate = 30;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `空隙空间: ${voidSpace.toFixed(2)} 立方毫米<br>空隙率: ${voidRate.toFixed(2)}%<br>最大允许空隙率: ${maxVoidRate}%<br>`;
+            
+            if (voidRate <= maxVoidRate) {
+                resultDiv.innerHTML += '<span style="color: green;">包装符合要求</span>';
+            } else {
+                resultDiv.innerHTML += '<span style="color: red;">包装不符合要求</span>';
+            }
+        }
+    </script>
 </body>
 </html>
