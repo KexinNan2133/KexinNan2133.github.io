@@ -1,127 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://kexinnan2133.github.io/style1.css">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+    <title>茶产品过度包装计算（仅适用于"k=9"）</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label, input {
+            display: block;
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <!--container-->
-    <div class="main">
-        <!--左栏-->
-        <div class="coloum">
-            <!--left-top-->
-            <div class="Left-top coloum">
-                <img src="https://kexinnan2133.github.io/image/头像.jpg" 
-                alt="Smiley" ;
-                id="logo";
-                style="margin-top: 10px;box-shadow: 0 0 20px #000"
-                width="70px" height="70px;">
-                <p><b>Happy Birthday to ShanShan~</b></p>
-            </div>
-            <!--左内栏-->
-            <div class="Left-in">
-                <div>
-                    <p>嘿! shanshan小朋友!</p>
-                    <p>生日快乐呀！</p>
-                    <p>新的一岁，不必万丈光芒</p>
-                    <p>但愿始终温暖有光，</p>
-                    <p>祝热烈灿烂，</p>
-                    <p>永远都有精力奔向远方！</p><br>
-                    <p>祝健康快乐，</p>
-                    <p>一直乐观拥抱美好生活！</p><br>
-                    <p>希望你一切安好！</p>
-                </div>
-            </div>
-        </div>
-        <!--右栏-->
-        <div class="Right-page">
-            <!--内容区-->
-            <div class="neirong">
-                <!--链接区-->
-                <a name="sec1">
-               <div class="lianjq">
-                <img class="tupian" src="https://kexinnan2133.github.io/image/头像.jpg" 
-                alt="smiley">
-                <p>shanshan,生日快乐呀！</p>
-                <p>愿，平安喜乐，四季如春！</p>
-                </div>
-                </a>
-                <a name="sec2">
-               <div class="lianjq">
-                <img class="tupian" src="https://kexinnan2133.github.io/image/玫瑰.JPG" 
-                alt="smiley">
-                <p>好康的“fafa”送给你!</p>
-               </div>
-               </a>
-               <a name="sec3">
-               <div class="lianjq">
-                <img class="tupian" src="https://kexinnan2133.github.io/image/天空3.jpg" 
-                alt="smiley">
-                <p>还有蓝蓝的天空！</p>
-               </div>
-               </a>
-               <a name="sec4">
-               <div class="lianjq">
-                <img class="tupian" src="https://kexinnan2133.github.io/image/灯塔.jpg" 
-                alt="smiley">
-                <p>这张照片也很好看耶！</p>
-               </div>
-               </a>
-               <a name="sec5">
-               <div class="lianjq">
-                <img class="tupian" src="https://kexinnan2133.github.io/image/骑楼老街.jpg" 
-                alt="smiley">
-                <p>时光匆匆逝去，沿途定格的风景亦在。</p>
-                <p>往后的日子里，会有更多的风景留下！</p>
-               </div>
-               </a>
-            </div>
-            <!--音乐播放器（hidden）-->
-            <audio src="https://kexinnan2133.github.io/msc/windsong.mp3" controls autoplay loop style="width: 0px;height: 0px;"></audio>
-            <source src="https://kexinnan2133.github.io/msc/windsong.mp3" type="audio/ogg">
-            <source src="https://kexinnan2133.github.io/msc/windsong.mp3" type="audio/mpeg">
-            <!--局部页面-->
-            <header>
-                <!--变化容器-->
-                <div class="container">
-                    <!--内列-->
-                    <div class="row">
-                        <!--抬头-->
-                        <div class="logo">
-                            <h2>姗姗</h2>
-                        </div>
-                        <!--点击块-->
-                        <div class="daohang">
-                            <a href="#sec1"><i class="fa fa-hand-lizard-o"></i></a>
-                        </div>
-                        <div class="daohang">
-                            <a href="#sec2"><i class="fa fa-hand-peace-o"></i></a>
-                        </div>
-                        <div class="daohang">
-                            <a href="#sec3"><i class="fa fa-hand-scissors-o"></i></a>
-                        </div>
-                        <div class="daohang">
-                            <a href="#sec4"><i class="fa fa-hand-pointer-o"></i></a>
-                        </div>
-                        <div class="daohang">
-                            <a href="#sec5"><i class="fa fa-hand-spock-o"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </header>
+    <h1>茶产品过度包装计算（仅适用于"k=9"）</h1>
+    <label for="length">外包装长度（毫米）:</label>
+    <input type="number" id="length" min="0" step="1">
+
+    <label for="width">外包装宽度（毫米）:</label>
+    <input type="number" id="width" min="0" step="1">
+
+    <label for="height">外包装高度（毫米）:</label>
+    <input type="number" id="height" min="0" step="1">
+
+    <button onclick="calculateVolume()">计算外包装容积</button>
+
+    <div class="result" id="volumeResult"></div>
+
+    <script>
+        function calculateVolume() {
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+
+            if (isNaN(length) || isNaN(width) || isNaN(height) || length <= 0 || width <= 0 || height <= 0) {
+                alert('请输入有效的数值');
+                return;
+            }
+
+            const volume = length * width * height;
+            document.getElementById('packageVolume').value = volume;
+            document.getElementById('volumeResult').innerHTML = `外包装容积: ${volume.toFixed(2)} 立方毫米`;
+        }
+    </script>
+    <label for="netWeight">茶叶净含量（克）:</label>
+    <input type="number" id="netWeight" min="0" step="0.01">
+    
+    <label for="packageVolume">商品销售外包装体积（立方毫米）:</label>
+    <input type="number" id="packageVolume" min="0" step="1">
+    
+    <button onclick="calculate()">计算</button>
+    
+    <div class="result" id="result"></div>
+    <a href="https://kexinnan2133.github.io/index.html">茶产品过度包装计算（仅适用于"k=13"）</a>
+    <script>
+        function calculate() {
+            const netWeight = parseFloat(document.getElementById('netWeight').value);
+            const packageVolume = parseFloat(document.getElementById('packageVolume').value);
             
+            if (isNaN(netWeight) || isNaN(packageVolume) || netWeight <= 0 || packageVolume <= 0) {
+                alert('请输入有效的数值');
+                return;
+            }
             
-
-        </div>
-
-    </div>
-
-
-
-
-
+            const voidSpace = packageVolume - 9 * 1000 * netWeight;
+            const voidRate = (voidSpace / packageVolume) * 100;
+            
+            let maxVoidRate;
+            if (netWeight <= 1) {
+                maxVoidRate = 85;
+            } else if (netWeight <= 5) {
+                maxVoidRate = 70;
+            } else if (netWeight <= 15) {
+                maxVoidRate = 60;
+            } else if (netWeight <= 30) {
+                maxVoidRate = 50;
+            } else if (netWeight <= 50) {
+                maxVoidRate = 40;
+            } else {
+                maxVoidRate = 30;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `空隙空间: ${voidSpace.toFixed(2)} 立方毫米<br>空隙率: ${voidRate.toFixed(2)}%<br>最大允许空隙率: ${maxVoidRate}%<br>`;
+            
+            if (voidRate <= maxVoidRate) {
+                resultDiv.innerHTML += '<span style="color: green;">包装符合要求</span>';
+            } else {
+                resultDiv.innerHTML += '<span style="color: red;">包装不符合要求</span>';
+            }
+        }
+    </script>
 </body>
 </html>
