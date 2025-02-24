@@ -6,35 +6,155 @@
     <title>茶产品过度包装计算（仅适用于"k=13"）</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
             font-family: Arial, sans-serif;
             margin: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+            max-width: 800px;
+            margin: auto;
         }
-        label, input {
-            display: block;
-            margin: 10px 0;
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            box-sizing: border-box;
         }
         button {
-            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            width: 40%;
+            margin: auto;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
         }
         .result {
             margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .container1 {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+
+        }
+        .container2 {
+            border: 2px solid #069d42;
+            border-radius: 20px;
+            display: flex;
+            margin-bottom: 20px;
+            margin: auto;
+            width: 600px;
+            padding-right: 30px;
+            padding-top: 30px;
+            padding-bottom: 30px;
+        }
+        .d-h {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            margin-bottom: 20px;
+            margin-right: 20px;
+            border: 1px solid #4e514f;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        .c-y {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            border: 1px solid #454545;
+            margin-top: 21px;
+            border-top-right-radius: 20px;
+            width: 80%;        
+        }
+        .c-b {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            border: 1px solid #4e514f; 
+            border-top-right-radius: 20px;
+            width: 80%;        
+        }
+        .b-zl {
+            display: flex;
+            flex: 2;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+            margin: 10px;
+            }
+            h1 {
+            font-size: 1.2em;
+            }
+            input, button {
+            font-size: 0.9em;
+            }
+            .result {
+            font-size: 1em;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>茶产品过度包装计算（仅适用于"k=13"）</h1>
-    <label for="length">外包装长度（毫米）:</label>
-    <input type="number" id="length" min="0" step="1">
+    <div class="container1">
+        <h1>茶产品过度包装计算（仅适用于"k=13"）</h1>
+    </div>    
+   
+    <div class="container2">
+        <div class="d-h">
+            <div class="c-y">
+                <a href="https://kexinnan2133.github.io/index.html">
+                    茶饼 (K="13")
+                </a>
+            </div><br>
+            <div class="c-b">
+                <a href="https://kexinnan2133.github.io/index.html">
+                    茶饼 (K="9")
+                </a>
+            </div>
+        </div>
+        <div class="b-zl">    
+            <label for="length">外包装长度（毫米）:</label>
+            <input type="number" id="length" min="0" step="1">
+        
+            <label for="width">外包装宽度（毫米）:</label>
+            <input type="number" id="width" min="0" step="1">
+        
+            <label for="height">外包装高度（毫米）:</label>
+            <input type="number" id="height" min="0" step="1">
+        
+            <button onclick="calculateVolume()">计算外包装容积</button>
+        
+            <div class="result" id="volumeResult"></div>
+    
+            <label for="netWeight">茶叶净含量（克）:</label>
+            <input type="number" id="netWeight" min="0" step="0.01">
+            
+            <label for="packageVolume">商品销售外包装体积（立方毫米）:</label>
+            <input type="number" id="packageVolume" min="0" step="1">
+            
+            <button onclick="calculate()">计算产品包装率</button>
+            
+            <div class="result" id="result"></div>
+        </div>
+    </div>
 
-    <label for="width">外包装宽度（毫米）:</label>
-    <input type="number" id="width" min="0" step="1">
-
-    <label for="height">外包装高度（毫米）:</label>
-    <input type="number" id="height" min="0" step="1">
-
-    <button onclick="calculateVolume()">计算外包装容积</button>
-
-    <div class="result" id="volumeResult"></div>
     <script>
         function calculateVolume() {
             const length = parseFloat(document.getElementById('length').value);
@@ -50,19 +170,6 @@
             document.getElementById('packageVolume').value = volume;
             document.getElementById('volumeResult').innerHTML = `外包装容积: ${volume.toFixed(2)} 立方毫米`;
         }
-    </script>
-    <label for="netWeight">茶叶净含量（克）:</label>
-    <input type="number" id="netWeight" min="0" step="0.01">
-    
-    <label for="packageVolume">商品销售外包装体积（立方毫米）:</label>
-    <input type="number" id="packageVolume" min="0" step="1">
-    
-    <button onclick="calculate()">计算</button>
-    
-    <div class="result" id="result"></div>
-    <a href="https://kexinnan2133.github.io/newpage.html">茶产品过度包装计算（仅适用于"k=9"）</a>
-   
-    <script>
         function calculate() {
             const netWeight = parseFloat(document.getElementById('netWeight').value);
             const packageVolume = parseFloat(document.getElementById('packageVolume').value);
