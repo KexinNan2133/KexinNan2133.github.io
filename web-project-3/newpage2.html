@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文字水印工具</title>
+    <link rel="stylesheet" href="./styles2.css">
+</head>
+<body>
+    <div class="container">
+        <h2>文字水印工具</h2>
+        <a href="../web-project-1/index.html">返回主页</a>
+        <div class="controls"; style="margin-top: 20px;">
+            <!-- Single image controls here -->
+            <div>
+                <label for="imageInput">上传图片：</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+            <div>
+                <label for="watermarkText">水印文字：</label>
+                <textarea id="watermarkText" rows="4" cols="50">水印</textarea>
+            </div>
+            <div>
+                <label for="fontSize">字体大小：</label>
+                <input type="number" id="fontSize" value="40" min="10" max="200"> px
+            </div>
+            <div>
+                <label for="fontColor">字体颜色：</label>
+                <input type="color" id="fontColor" value="#FF0000">
+            </div>
+            <div>
+                <label for="angle">倾斜度：</label>
+                <input type="range" id="angle" min="-90" max="90" value="-45">
+                <span id="angleValue">-45</span>°
+                <input type="number" id="angleNumber" value="-45" min="-90" max="90">
+            </div>
+            <div>
+                <label for="positionX">X 位置：</label>
+                <input type="range" id="positionX" min="0" max="100" value="50">
+                <span id="positionXValue">50</span>%
+            </div>
+            <div>
+                <label for="positionY">Y 位置：</label>
+                <input type="range" id="positionY" min="0" max="100" value="50">
+                <span id="positionYValue">50</span>%
+            </div>
+            <div>
+                <label for="textAlign">文字对齐：</label>
+                <select id="textAlign">
+                    <option value="center">居中</option>
+                    <option value="left">左对齐</option>
+                    <option value="right">右对齐</option>
+                </select>
+            </div>
+            <div class="image-properties" id="imageProperties">
+                <div>宽度: <span id="imageWidth"></span> px</div>
+                <div>高度: <span id="imageHeight"></span> px</div>
+                <div>大小: <span id="imageSize"></span> KB</div>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <label for="scale">缩放比例：</label>
+                <input type="number" id="scale" value="100" min="10" max="200"> %
+            
+                <label for="widthInput">宽度：</label>
+                <input type="number" id="widthInput" min="10">
+           
+                <label for="heightInput">高度：</label>
+                <input type="number" id="heightInput" min="10">
+           
+                <label for="standardSize">标准尺寸：</label>
+                <select id="standardSize">
+                    <option value="">选择尺寸</option>
+                    <option value="295,413">一寸 (295x413)</option>
+                    <option value="413,626">二寸 (413x626)</option>
+                </select>
+            </div>
+            <div>
+                <label for="compression">压缩大小：</label>
+                <input type="number" id="compression" value="100" min="10" max="100"> KB
+            </div>
+        </div>
+        <canvas id="canvas"></canvas>
+        <div style="margin-top: 20px;">
+            <label for="imageFormat">图片格式：</label>
+            <select id="imageFormat">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="webp">WEBP</option>
+            </select>
+            <button id="exportBtn">导出图片</button>
+        </div>
+
+        <hr style="margin:20px 0;">
+
+        <div class="batch-controls">
+            <h3>批量处理</h3>
+            <div class="input-group">
+                <div>
+                    <label for="batchImageInput">上传多张图片：</label>
+                    <input type="file" id="batchImageInput" accept="image/*" multiple>
+                </div>
+                <div>
+                    <button id="batchExportBtn">批量导出图片</button>
+                </div>
+            </div>
+            <!-- Preview container for batch processed images -->
+            <div id="batchPreview"></div>
+        </div>
+    </div>
+
+    <script src="./scripts2.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>茶产品过度包装计算（仅适用于"k=9"）</title>
+    <link rel="stylesheet" href="./css/styles1-1.css">
+</head>
+<body>
+    <div class="container1">
+        <h1>茶产品过度包装计算（仅适用于"k=9"）</h1>
+    </div>    
+   
+    <div class="container2">
+        <div class="d-h">
+            <div class="c-y">
+                <a href="./newpage1.html">
+                    茶叶 (K="13")
+                </a>
+            </div><br>
+            <div class="c-b">
+                <a href="./newpage1-1.html">
+                    茶饼 (K="9")
+                </a>
+            </div>
+            <div>
+                <a href="../web-project-1/index.html">
+                   返回主页
+                </a>
+            </div>
+        </div>
+        <div class="b-zl">    
+            <label for="length">外包装长度（毫米）:</label>
+            <input type="number" id="length" min="0" step="1">
+        
+            <label for="width">外包装宽度（毫米）:</label>
+            <input type="number" id="width" min="0" step="1">
+        
+            <label for="height">外包装高度（毫米）:</label>
+            <input type="number" id="height" min="0" step="1">
+        
+            <button onclick="calculateVolume()">计算外包装容积</button>
+        
+            <div class="result" id="volumeResult"></div>
+    
+            <label for="netWeight">茶叶净含量（克）:</label>
+            <input type="number" id="netWeight" min="0" step="0.01">
+            
+            <label for="packageVolume">商品销售外包装体积（立方毫米）:</label>
+            <input type="number" id="packageVolume" min="0" step="1">
+            
+            <button onclick="calculate()">计算产品包装率</button>
+            
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <script src="./js/scripts1-1.js"></script>
+</body>
+</html>
