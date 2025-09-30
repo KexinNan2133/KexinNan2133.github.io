@@ -2443,7 +2443,7 @@
             return previewData;
         }
 
-        // 其他计算函数的实现
+        // 计算函数实现 - COUNTIFS
         function calculateCOUNTIFS(resultCol) {
             const condition1Column = document.getElementById('condition1Column').value;
             const condition1Operator = document.getElementById('condition1Operator').value;
@@ -2478,29 +2478,244 @@
             return true;
         }
 
+        // 预览函数实现 - COUNTIFS
         function previewCOUNTIFS(resultCol) {
-            // 实现COUNTIFS预览逻辑
-            return [];
+            const condition1Column = document.getElementById('condition1Column').value;
+            const condition1Operator = document.getElementById('condition1Operator').value;
+            const condition1Value = document.getElementById('condition1Value').value;
+            
+            const condition2Column = document.getElementById('condition2Column').value;
+            const condition2Operator = document.getElementById('condition2Operator').value;
+            const condition2Value = document.getElementById('condition2Value').value;
+            
+            if (!condition1Column || !condition1Operator || condition1Value === '' ||
+                !condition2Column || !condition2Operator || condition2Value === '') {
+                return [];
+            }
+            
+            // 计算满足所有条件的总数
+            let count = 0;
+            currentData.forEach(row => {
+                const value1 = row[condition1Column];
+                const value2 = row[condition2Column];
+                
+                if (checkCondition(value1, condition1Operator, condition1Value) &&
+                    checkCondition(value2, condition2Operator, condition2Value)) {
+                    count++;
+                }
+            });
+            
+            const previewData = [];
+            const previewRows = Math.min(currentData.length, 5);
+            
+            for (let i = 0; i < previewRows; i++) {
+                previewData.push({
+                    row: i,
+                    value: count
+                });
+            }
+            
+            return previewData;
         }
 
+        // 计算函数实现 - SUMIFS
         function calculateSUMIFS(resultCol) {
-            // 实现SUMIFS逻辑
+            const sumColumn = document.getElementById('sumColumn').value;
+            const condition1Column = document.getElementById('condition1Column').value;
+            const condition1Operator = document.getElementById('condition1Operator').value;
+            const condition1Value = document.getElementById('condition1Value').value;
+            
+            const condition2Column = document.getElementById('condition2Column').value;
+            const condition2Operator = document.getElementById('condition2Operator').value;
+            const condition2Value = document.getElementById('condition2Value').value;
+            
+            // 检查求和列是否为数值类型
+            if (columnTypes[sumColumn] !== 'number') {
+                showNotification('错误', '求和列必须是数值类型', 'error');
+                return false;
+            }
+            
+            if (!sumColumn || !condition1Column || !condition1Operator || condition1Value === '' ||
+                !condition2Column || !condition2Operator || condition2Value === '') {
+                return false;
+            }
+            
+            // 计算满足所有条件的总和
+            let sum = 0;
+            currentData.forEach(row => {
+                const value1 = row[condition1Column];
+                const value2 = row[condition2Column];
+                
+                if (checkCondition(value1, condition1Operator, condition1Value) &&
+                    checkCondition(value2, condition2Operator, condition2Value)) {
+                    const num = parseFloat(row[sumColumn]);
+                    if (!isNaN(num)) {
+                        sum += num;
+                    }
+                }
+            });
+            
+            // 为每行设置相同的求和结果
+            currentData.forEach(row => {
+                row[resultCol] = sum.toFixed(2);
+            });
+            
             return true;
         }
 
+        // 预览函数实现 - SUMIFS
         function previewSUMIFS(resultCol) {
-            // 实现SUMIFS预览逻辑
-            return [];
+            const sumColumn = document.getElementById('sumColumn').value;
+            const condition1Column = document.getElementById('condition1Column').value;
+            const condition1Operator = document.getElementById('condition1Operator').value;
+            const condition1Value = document.getElementById('condition1Value').value;
+            
+            const condition2Column = document.getElementById('condition2Column').value;
+            const condition2Operator = document.getElementById('condition2Operator').value;
+            const condition2Value = document.getElementById('condition2Value').value;
+            
+            // 检查求和列是否为数值类型
+            if (columnTypes[sumColumn] !== 'number') {
+                showNotification('错误', '求和列必须是数值类型', 'error');
+                return [];
+            }
+            
+            if (!sumColumn || !condition1Column || !condition1Operator || condition1Value === '' ||
+                !condition2Column || !condition2Operator || condition2Value === '') {
+                return [];
+            }
+            
+            // 计算满足所有条件的总和
+            let sum = 0;
+            currentData.forEach(row => {
+                const value1 = row[condition1Column];
+                const value2 = row[condition2Column];
+                
+                if (checkCondition(value1, condition1Operator, condition1Value) &&
+                    checkCondition(value2, condition2Operator, condition2Value)) {
+                    const num = parseFloat(row[sumColumn]);
+                    if (!isNaN(num)) {
+                        sum += num;
+                    }
+                }
+            });
+            
+            const previewData = [];
+            const previewRows = Math.min(currentData.length, 5);
+            
+            for (let i = 0; i < previewRows; i++) {
+                previewData.push({
+                    row: i,
+                    value: sum.toFixed(2)
+                });
+            }
+            
+            return previewData;
         }
 
+        // 计算函数实现 - AVERAGEIFS
         function calculateAVERAGEIFS(resultCol) {
-            // 实现AVERAGEIFS逻辑
+            const averageColumn = document.getElementById('averageColumn').value;
+            const condition1Column = document.getElementById('condition1Column').value;
+            const condition1Operator = document.getElementById('condition1Operator').value;
+            const condition1Value = document.getElementById('condition1Value').value;
+            
+            const condition2Column = document.getElementById('condition2Column').value;
+            const condition2Operator = document.getElementById('condition2Operator').value;
+            const condition2Value = document.getElementById('condition2Value').value;
+            
+            // 检查平均值列是否为数值类型
+            if (columnTypes[averageColumn] !== 'number') {
+                showNotification('错误', '平均值列必须是数值类型', 'error');
+                return false;
+            }
+            
+            if (!averageColumn || !condition1Column || !condition1Operator || condition1Value === '' ||
+                !condition2Column || !condition2Operator || condition2Value === '') {
+                return false;
+            }
+            
+            // 计算满足所有条件的平均值
+            let sum = 0;
+            let count = 0;
+            
+            currentData.forEach(row => {
+                const value1 = row[condition1Column];
+                const value2 = row[condition2Column];
+                
+                if (checkCondition(value1, condition1Operator, condition1Value) &&
+                    checkCondition(value2, condition2Operator, condition2Value)) {
+                    const num = parseFloat(row[averageColumn]);
+                    if (!isNaN(num)) {
+                        sum += num;
+                        count++;
+                    }
+                }
+            });
+            
+            const average = count > 0 ? sum / count : 0;
+            
+            // 为每行设置相同的平均值结果
+            currentData.forEach(row => {
+                row[resultCol] = average.toFixed(2);
+            });
+            
             return true;
         }
 
+        // 预览函数实现 - AVERAGEIFS
         function previewAVERAGEIFS(resultCol) {
-            // 实现AVERAGEIFS预览逻辑
-            return [];
+            const averageColumn = document.getElementById('averageColumn').value;
+            const condition1Column = document.getElementById('condition1Column').value;
+            const condition1Operator = document.getElementById('condition1Operator').value;
+            const condition1Value = document.getElementById('condition1Value').value;
+            
+            const condition2Column = document.getElementById('condition2Column').value;
+            const condition2Operator = document.getElementById('condition2Operator').value;
+            const condition2Value = document.getElementById('condition2Value').value;
+            
+            // 检查平均值列是否为数值类型
+            if (columnTypes[averageColumn] !== 'number') {
+                showNotification('错误', '平均值列必须是数值类型', 'error');
+                return [];
+            }
+            
+            if (!averageColumn || !condition1Column || !condition1Operator || condition1Value === '' ||
+                !condition2Column || !condition2Operator || condition2Value === '') {
+                return [];
+            }
+            
+            // 计算满足所有条件的平均值
+            let sum = 0;
+            let count = 0;
+            
+            currentData.forEach(row => {
+                const value1 = row[condition1Column];
+                const value2 = row[condition2Column];
+                
+                if (checkCondition(value1, condition1Operator, condition1Value) &&
+                    checkCondition(value2, condition2Operator, condition2Value)) {
+                    const num = parseFloat(row[averageColumn]);
+                    if (!isNaN(num)) {
+                        sum += num;
+                        count++;
+                    }
+                }
+            });
+            
+            const average = count > 0 ? sum / count : 0;
+            
+            const previewData = [];
+            const previewRows = Math.min(currentData.length, 5);
+            
+            for (let i = 0; i < previewRows; i++) {
+                previewData.push({
+                    row: i,
+                    value: average.toFixed(2)
+                });
+            }
+            
+            return previewData;
         }
 
         // 检查条件是否满足
@@ -2839,8 +3054,33 @@
                         isNumber = false;
                     }
                     
-                    // 检查是否为日期
-                    if (!isNaN(Date.parse(strValue))) {
+                    // 检查是否为日期 - 优化版
+                    // 尝试多种日期格式解析
+                    const dateFormats = [
+                        'YYYY-MM-DD',
+                        'MM/DD/YYYY',
+                        'DD/MM/YYYY',
+                        'YYYY/MM/DD',
+                        'MM-DD-YYYY',
+                        'DD-MM-YYYY',
+                        'MMM DD, YYYY' // 如 Jan 01, 2023
+                    ];
+                    
+                    let parsedDate = null;
+                    // 尝试原生Date解析
+                    parsedDate = new Date(strValue);
+                    if (parsedDate.toString() === 'Invalid Date') {
+                        // 尝试处理Excel的日期序列号（自1900年1月1日以来的天数）
+                        const excelDateNum = parseFloat(strValue);
+                        if (!isNaN(excelDateNum) && excelDateNum > 0) {
+                            // Excel日期转换公式
+                            parsedDate = new Date((excelDateNum - 25569) * 86400000);
+                        }
+                    }
+                    
+                    // 验证解析的日期是否有效且合理（在1970-2100年之间）
+                    if (parsedDate && parsedDate.toString() !== 'Invalid Date' && 
+                        parsedDate.getFullYear() >= 1970 && parsedDate.getFullYear() <= 2100) {
                         dateCount++;
                         isDate = true;
                     }
@@ -2869,467 +3109,6 @@
                 }
             });
         }
-        
-        // 渲染可用字段
-        function renderAvailableFields() {
-            availableFields.innerHTML = '';
-            
-            if (columns.length === 0) {
-                availableFields.innerHTML = '<div class="text-sm text-gray-500 italic">请先导入数据</div>';
-                return;
-            }
-            
-            // 过滤掉已在维度中的字段
-            const available = columns.filter(col => 
-                !rowDimensions.includes(col) && !valueDimensions.includes(col)
-            );
-            
-            if (available.length === 0) {
-                availableFields.innerHTML = '<div class="text-sm text-gray-500 italic">所有字段已用于分析</div>';
-                return;
-            }
-            
-            available.forEach(col => {
-                const fieldEl = document.createElement('div');
-                fieldEl.className = 'draggable-field p-2 mb-1 bg-white border border-gray-200 rounded text-sm flex items-center justify-between';
-                fieldEl.draggable = true;
-                fieldEl.dataset.field = col;
-                
-                // 根据字段类型添加不同的图标
-                let typeIcon = '';
-                if (columnTypes[col] === 'number') {
-                    typeIcon = '<span class="field-type-icon bg-blue-100 text-blue-600"><i class="fa fa-hashtag"></i></span>';
-                } else if (columnTypes[col] === 'date') {
-                    typeIcon = '<span class="field-type-icon bg-green-100 text-green-600"><i class="fa fa-calendar"></i></span>';
-                } else {
-                    typeIcon = '<span class="field-type-icon bg-gray-100 text-gray-600"><i class="fa fa-font"></i></span>';
-                }
-                
-                fieldEl.innerHTML = `
-                    ${typeIcon}
-                    <span>${col}</span>
-                `;
-                
-                fieldEl.addEventListener('dragstart', function(e) {
-                    e.dataTransfer.setData('text/plain', col);
-                    setTimeout(() => {
-                        fieldEl.classList.add('opacity-50');
-                    }, 0);
-                });
-                
-                fieldEl.addEventListener('dragend', function() {
-                    fieldEl.classList.remove('opacity-50');
-                });
-                
-                availableFields.appendChild(fieldEl);
-            });
-        }
-        
-        // 渲染维度区域
-        function renderDimensions() {
-            // 渲染行维度
-            renderDimensionArea(rowDimensionsContainer, rowDimensions, 'row');
-            
-            // 渲染值维度
-            renderDimensionArea(valueDimensionsContainer, valueDimensions, 'value');
-            
-            // 更新按钮状态
-            const hasData = rowDimensions.length > 0 && valueDimensions.length > 0;
-            refreshChartBtn.disabled = !hasData;
-            exportChartBtn.disabled = !hasData || !pivotChartInstance;
-            
-            // 显示/隐藏图表占位符
-            chartPlaceholder.style.display = hasData ? 'none' : 'flex';
-        }
-        
-        // 渲染单个维度区域
-        function renderDimensionArea(container, dimensions, type) {
-            if (dimensions.length === 0) {
-                container.innerHTML = type === 'row' 
-                    ? '<div class="text-sm text-gray-500 italic">拖拽字段到此处</div>'
-                    : '<div class="text-sm text-gray-500 italic">拖拽数值字段到此处</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            dimensions.forEach((field, index) => {
-                const fieldEl = document.createElement('div');
-                fieldEl.className = 'p-2 mb-1 bg-white border border-gray-200 rounded text-sm flex items-center justify-between';
-                fieldEl.dataset.field = field;
-                
-                // 根据字段类型添加不同的图标
-                let typeIcon = '';
-                if (columnTypes[field] === 'number') {
-                    typeIcon = '<span class="field-type-icon bg-blue-100 text-blue-600"><i class="fa fa-hashtag"></i></span>';
-                } else if (columnTypes[field] === 'date') {
-                    typeIcon = '<span class="field-type-icon bg-green-100 text-green-600"><i class="fa fa-calendar"></i></span>';
-                } else {
-                    typeIcon = '<span class="field-type-icon bg-gray-100 text-gray-600"><i class="fa fa-font"></i></span>';
-                }
-                
-                fieldEl.innerHTML = `
-                    ${typeIcon}
-                    <span>${field}</span>
-                    <button class="remove-dimension text-gray-400 hover:text-danger" data-type="${type}" data-index="${index}">
-                        <i class="fa fa-times"></i>
-                    </button>
-                `;
-                
-                container.appendChild(fieldEl);
-            });
-            
-            // 添加删除维度事件
-            container.querySelectorAll('.remove-dimension').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const type = this.dataset.type;
-                    const index = parseInt(this.dataset.index);
-                    
-                    if (type === 'row') {
-                        rowDimensions.splice(index, 1);
-                    } else {
-                        valueDimensions.splice(index, 1);
-                    }
-                    
-                    renderAvailableFields();
-                    renderDimensions();
-                    updatePivotAnalysis();
-                });
-            });
-        }
-        
-        // 拖放相关函数
-        function highlightDimensionArea(type, highlight) {
-            const container = type === 'row' ? rowDimensionsContainer : valueDimensionsContainer;
-            if (highlight) {
-                container.classList.add('dimension-area-active');
-            } else {
-                container.classList.remove('dimension-area-active');
-            }
-        }
-        
-        function dropField(event, type) {
-            event.preventDefault();
-            highlightDimensionArea(type, false);
-            
-            const field = event.dataTransfer.getData('text/plain');
-            
-            // 检查是否为有效的字段
-            if (!columns.includes(field)) return;
-            
-            // 检查是否已在其他维度中
-            if (rowDimensions.includes(field) || valueDimensions.includes(field)) return;
-            
-            // 如果是值维度，检查是否为数值类型
-            if (type === 'value' && columnTypes[field] !== 'number') {
-                showNotification('警告', '值维度仅支持数值类型字段。您可以在"数据清洗"区域手动将该列设置为数值类型。', 'warning');
-                return;
-            }
-            
-            // 添加到相应的维度
-            if (type === 'row') {
-                rowDimensions.push(field);
-            } else {
-                valueDimensions.push(field);
-            }
-            
-            // 重新渲染
-            renderAvailableFields();
-            renderDimensions();
-            updatePivotAnalysis();
-        }
-        
-        // 清除所有维度
-        function clearDimensions() {
-            rowDimensions = [];
-            valueDimensions = [];
-            
-            renderAvailableFields();
-            renderDimensions();
-            updatePivotAnalysis();
-        }
-        
-        // 更新透视分析结果
-        function updatePivotAnalysis() {
-            if (rowDimensions.length === 0 || valueDimensions.length === 0) {
-                pivotTable.innerHTML = `
-                    <thead><tr class="bg-gray-50"></tr></thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="100%" class="text-center py-8 text-gray-400">
-                                配置维度后显示透视表数据
-                            </td>
-                        </tr>
-                    </tbody>
-                `;
-                
-                if (pivotChartInstance) {
-                    pivotChartInstance.destroy();
-                    pivotChartInstance = null;
-                }
-                
-                return;
-            }
-            
-            // 计算透视数据
-            const pivotData = calculatePivotData();
-            
-            // 渲染透视表
-            renderPivotTable(pivotData);
-            
-            // 渲染图表
-            renderPivotChart(pivotData);
-        }
-        
-        // 计算透视数据
-        function calculatePivotData() {
-            const result = {};
-            
-            // 按行维度分组并计算值维度的聚合值
-            currentData.forEach(row => {
-                // 创建行维度键
-                const rowKey = rowDimensions.map(dim => row[dim]).join('||');
-                
-                // 如果键不存在则初始化
-                if (!result[rowKey]) {
-                    result[rowKey] = {
-                        dimensions: rowDimensions.reduce((obj, dim) => {
-                            obj[dim] = row[dim];
-                            return obj;
-                        }, {}),
-                        values: {}
-                    };
-                    
-                    // 初始化值维度计数器
-                    valueDimensions.forEach(valueDim => {
-                        result[rowKey].values[valueDim] = {
-                            sum: 0,
-                            count: 0,
-                            total: 0,
-                            max: -Infinity,
-                            min: Infinity
-                        };
-                    });
-                }
-                
-                // 更新值维度数据
-                valueDimensions.forEach(valueDim => {
-                    const value = parseFloat(row[valueDim]) || 0;
-                    const valueData = result[rowKey].values[valueDim];
-                    
-                    valueData.sum += value;
-                    valueData.count += 1;
-                    valueData.total += value;
-                    valueData.max = Math.max(valueData.max, value);
-                    valueData.min = Math.min(valueData.min, value);
-                });
-            });
-            
-            // 转换为数组并计算派生指标
-            return Object.values(result).map(item => {
-                valueDimensions.forEach(valueDim => {
-                    const valueData = item.values[valueDim];
-                    // 计算平均值
-                    valueData.average = valueData.count > 0 ? valueData.total / valueData.count : 0;
-                });
-                return item;
-            });
-        }
-        
-        // 渲染透视表
-        function renderPivotTable(pivotData) {
-            // 清空表格
-            pivotTable.innerHTML = '';
-            
-            // 创建表头
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            headerRow.className = 'bg-gray-50';
-            
-            // 添加行维度表头
-            rowDimensions.forEach(dim => {
-                const th = document.createElement('th');
-                th.className = 'px-4 py-2 text-left border-b border-gray-200';
-                th.textContent = dim;
-                headerRow.appendChild(th);
-            });
-            
-            // 添加值维度表头
-            valueDimensions.forEach(valueDim => {
-                const aggregationLabel = getAggregationLabel(currentAggregation);
-                const th = document.createElement('th');
-                th.className = 'px-4 py-2 text-left border-b border-gray-200';
-                th.textContent = `${valueDim} (${aggregationLabel})`;
-                headerRow.appendChild(th);
-            });
-            
-            thead.appendChild(headerRow);
-            pivotTable.appendChild(thead);
-            
-            // 创建表体
-            const tbody = document.createElement('tbody');
-            
-            if (pivotData.length === 0) {
-                const tr = document.createElement('tr');
-                const td = document.createElement('td');
-                td.colSpan = rowDimensions.length + valueDimensions.length;
-                td.className = 'text-center py-8 text-gray-400';
-                td.textContent = '没有数据';
-                tr.appendChild(td);
-                tbody.appendChild(tr);
-            } else {
-                pivotData.forEach(item => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50';
-                    
-                    // 添加行维度数据
-                    rowDimensions.forEach(dim => {
-                        const td = document.createElement('td');
-                        td.className = 'px-4 py-2 border-b border-gray-200';
-                        td.textContent = item.dimensions[dim] || '';
-                        tr.appendChild(td);
-                    });
-                    
-                    // 添加值维度数据
-                    valueDimensions.forEach(valueDim => {
-                        const td = document.createElement('td');
-                        td.className = 'px-4 py-2 border-b border-gray-200';
-                        
-                        // 根据当前聚合方式显示对应的值
-                        const value = item.values[valueDim][currentAggregation];
-                        td.textContent = currentAggregation === 'average' ? value.toFixed(2) : value;
-                        tr.appendChild(td);
-                    });
-                    
-                    tbody.appendChild(tr);
-                });
-            }
-            
-            pivotTable.appendChild(tbody);
-        }
-        
-        // 渲染透视图表
-        function renderPivotChart(pivotData) {
-            // 销毁现有图表
-            if (pivotChartInstance) {
-                pivotChartInstance.destroy();
-            }
-            
-            const ctx = pivotChart.getContext('2d');
-            
-            // 准备图表数据
-            const chartType = pivotChartTypeSelect.value;
-            
-            // 处理标签 - 组合所有行维度
-            const labels = pivotData.map(item => 
-                rowDimensions.map(dim => item.dimensions[dim]).join(' - ')
-            );
-            
-            // 处理数据集
-            const datasets = valueDimensions.map((valueDim, index) => {
-                // 生成不同的颜色
-                const color = getDatasetColor(index);
-                
-                return {
-                    label: valueDim,
-                    data: pivotData.map(item => item.values[valueDim][currentAggregation]),
-                    backgroundColor: chartType === 'pie' || chartType === 'doughnut' || chartType === 'polarArea' 
-                        ? labels.map((_, i) => getDatasetColor(i))
-                        : color + '80', // 添加透明度
-                    borderColor: chartType === 'pie' || chartType === 'doughnut' || chartType === 'polarArea'
-                        ? '#fff'
-                        : color,
-                    borderWidth: 1
-                };
-            });
-            
-            // 图表配置
-            const config = {
-                type: chartType,
-                data: {
-                    labels: labels,
-                    datasets: datasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: `数据透视分析 (${getAggregationLabel(currentAggregation)})`
-                        }
-                    },
-                    scales: chartType !== 'pie' && chartType !== 'doughnut' && chartType !== 'polarArea' ? {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: getAggregationLabel(currentAggregation)
-                            }
-                        }
-                    } : {}
-                }
-            };
-            
-            // 特殊图表类型的额外配置
-            if (chartType === 'radar') {
-                config.options.scales = {
-                    r: {
-                        beginAtZero: true,
-                        ticks: {
-                            display: false
-                        }
-                    }
-                };
-            }
-            
-            // 创建图表
-            pivotChartInstance = new Chart(ctx, config);
-            
-            // 更新导出按钮状态
-            exportChartBtn.disabled = false;
-        }
-        
-        // 导出图表为PNG
-        function exportChartAsPNG() {
-            if (!pivotChartInstance) return;
-            
-            html2canvas(pivotChart).then(canvas => {
-                // 创建下载链接
-                const link = document.createElement('a');
-                link.download = `图表-${new Date().getTime()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                
-                showNotification('成功', '图表已导出为PNG图片', 'success');
-            }).catch(err => {
-                console.error('导出图表失败:', err);
-                showNotification('错误', '导出图表失败，请重试', 'error');
-            });
-        }
-        
-        // 辅助函数：获取聚合方式的显示名称
-        function getAggregationLabel(aggregation) {
-            const labels = {
-                'sum': '求和',
-                'average': '平均值',
-                'count': '计数',
-                'max': '最大值',
-                'min': '最小值'
-            };
-            return labels[aggregation] || aggregation;
-        }
-        
-        // 辅助函数：生成数据集颜色
-        function getDatasetColor(index) {
-            const colors = [
-                '#165DFF', '#36CFC9', '#52C41A', '#FAAD14', '#FF4D4F', 
-                '#722ED1', '#EB0AA4', '#86909C', '#0FC6C2', '#7BC616'
-            ];
-            return colors[index % colors.length];
-        }
 
         // 填充图表列选择器
         function populateChartColumnSelect() {
@@ -3341,13 +3120,13 @@
             chartColumnSelect.appendChild(defaultOption);
             
             columns.forEach(col => {
-                // 显示列类型
-                let optionText = `${col} (${getTypeDisplayName(columnTypes[col])})`;
                 const option = document.createElement('option');
                 option.value = col;
-                option.textContent = optionText;
+                option.textContent = col;
                 chartColumnSelect.appendChild(option);
             });
+            
+            generateChartBtn.disabled = true;
         }
 
         // 生成图表
@@ -3360,32 +3139,29 @@
                 return;
             }
             
-            // 准备图表数据
+            // 准备数据
             const labels = [];
             const data = [];
             
-            // 检查是否为数值列
-            const isNumeric = columnTypes[column] === 'number';
-            
-            if (isNumeric) {
-                // 数值列 - 使用前20行数据
-                const maxItems = Math.min(currentData.length, 20);
-                for (let i = 0; i < maxItems; i++) {
-                    labels.push(`行 ${i + 1}`);
-                    data.push(parseFloat(currentData[i][column]) || 0);
-                }
+            // 根据列类型处理数据
+            if (columnTypes[column] === 'number') {
+                // 数值列 - 显示每个值
+                currentData.slice(0, 30).forEach((row, index) => {
+                    labels.push(`行 ${index + 1}`);
+                    data.push(parseFloat(row[column]) || 0);
+                });
             } else {
-                // 文本列 - 统计每个值的出现次数
+                // 文本或日期列 - 统计每个值的出现次数
                 const valueCounts = {};
                 currentData.forEach(row => {
-                    const value = row[column] || '空值';
+                    const value = String(row[column] || '空值');
                     valueCounts[value] = (valueCounts[value] || 0) + 1;
                 });
                 
-                // 限制最多显示10个类别
+                // 限制显示数量，避免图表过于拥挤
                 const sortedValues = Object.entries(valueCounts)
                     .sort((a, b) => b[1] - a[1])
-                    .slice(0, 10);
+                    .slice(0, 15);
                 
                 sortedValues.forEach(([value, count]) => {
                     labels.push(value);
@@ -3407,42 +3183,519 @@
                     datasets: [{
                         label: column,
                         data: data,
-                        backgroundColor: [
-                            'rgba(22, 93, 255, 0.7)',
-                            'rgba(54, 207, 201, 0.7)',
-                            'rgba(82, 196, 26, 0.7)',
-                            'rgba(250, 173, 20, 0.7)',
-                            'rgba(255, 77, 79, 0.7)',
-                            'rgba(140, 140, 140, 0.7)',
-                            'rgba(123, 97, 255, 0.7)',
-                            'rgba(255, 117, 157, 0.7)',
-                            'rgba(77, 182, 172, 0.7)',
-                            'rgba(148, 159, 177, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(22, 93, 255, 1)',
-                            'rgba(54, 207, 201, 1)',
-                            'rgba(82, 196, 26, 1)',
-                            'rgba(250, 173, 20, 1)',
-                            'rgba(255, 77, 79, 1)',
-                            'rgba(140, 140, 140, 1)',
-                            'rgba(123, 97, 255, 1)',
-                            'rgba(255, 117, 157, 1)',
-                            'rgba(77, 182, 172, 1)',
-                            'rgba(148, 159, 177, 1)'
-                        ],
+                        backgroundColor: 'rgba(22, 93, 255, 0.6)',
+                        borderColor: 'rgba(22, 93, 255, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: chartType !== 'pie' ? {
+                    scales: chartType !== 'pie' && chartType !== 'doughnut' ? {
                         y: {
                             beginAtZero: true
                         }
                     } : {}
                 }
+            });
+            
+            showNotification('成功', `已生成${column}的${chartType === 'bar' ? '柱状' : chartType === 'pie' ? '饼' : '折线'}图`, 'success');
+        }
+
+        // 渲染可用字段
+        function renderAvailableFields() {
+            availableFields.innerHTML = '';
+            
+            if (columns.length === 0) {
+                availableFields.innerHTML = '<div class="text-sm text-gray-500 italic">请先导入数据</div>';
+                return;
+            }
+            
+            // 计算可用字段（不在行维度和值维度中的字段）
+            availableFieldsList = columns.filter(col => 
+                !rowDimensions.includes(col) && !valueDimensions.includes(col)
+            );
+            
+            if (availableFieldsList.length === 0) {
+                availableFields.innerHTML = '<div class="text-sm text-gray-500 italic">所有字段已使用</div>';
+                return;
+            }
+            
+            availableFieldsList.forEach(col => {
+                const fieldItem = document.createElement('div');
+                fieldItem.className = 'flex items-center justify-between p-2 mb-1 bg-white rounded border border-gray-200 hover:border-primary cursor-move';
+                fieldItem.draggable = true;
+                fieldItem.ondragstart = function(e) {
+                    e.dataTransfer.setData('text/plain', col);
+                };
+                
+                // 添加类型图标
+                let typeIcon = '';
+                if (columnTypes[col] === 'number') {
+                    typeIcon = '<span class="field-type-icon bg-blue-100 text-blue-800"><i class="fa fa-hashtag"></i></span>';
+                } else if (columnTypes[col] === 'date') {
+                    typeIcon = '<span class="field-type-icon bg-green-100 text-green-800"><i class="fa fa-calendar"></i></span>';
+                } else {
+                    typeIcon = '<span class="field-type-icon bg-gray-100 text-gray-800"><i class="fa fa-font"></i></span>';
+                }
+                
+                fieldItem.innerHTML = `
+                    <div class="flex items-center">
+                        ${typeIcon}
+                        <span>${col}</span>
+                    </div>
+                `;
+                
+                availableFields.appendChild(fieldItem);
+            });
+        }
+
+        // 渲染维度
+        function renderDimensions() {
+            // 渲染行维度
+            rowDimensionsContainer.innerHTML = '';
+            if (rowDimensions.length === 0) {
+                rowDimensionsContainer.innerHTML = '<div class="text-sm text-gray-500 italic">拖拽字段到此处</div>';
+            } else {
+                rowDimensions.forEach(col => {
+                    const dimensionItem = createDimensionItem(col, 'row');
+                    rowDimensionsContainer.appendChild(dimensionItem);
+                });
+            }
+            
+            // 渲染值维度
+            valueDimensionsContainer.innerHTML = '';
+            if (valueDimensions.length === 0) {
+                valueDimensionsContainer.innerHTML = '<div class="text-sm text-gray-500 italic">拖拽数值字段到此处</div>';
+            } else {
+                valueDimensions.forEach(col => {
+                    const dimensionItem = createDimensionItem(col, 'value');
+                    valueDimensionsContainer.appendChild(dimensionItem);
+                });
+            }
+            
+            // 更新图表按钮状态
+            refreshChartBtn.disabled = rowDimensions.length === 0 || valueDimensions.length === 0;
+            exportChartBtn.disabled = rowDimensions.length === 0 || valueDimensions.length === 0 || !pivotChartInstance;
+        }
+
+        // 创建维度项
+        function createDimensionItem(col, dimensionType) {
+            const item = document.createElement('div');
+            item.className = 'flex items-center justify-between p-2 mb-1 bg-white rounded border border-gray-200';
+            
+            // 添加类型图标
+            let typeIcon = '';
+            if (columnTypes[col] === 'number') {
+                typeIcon = '<span class="field-type-icon bg-blue-100 text-blue-800"><i class="fa fa-hashtag"></i></span>';
+            } else if (columnTypes[col] === 'date') {
+                typeIcon = '<span class="field-type-icon bg-green-100 text-green-800"><i class="fa fa-calendar"></i></span>';
+            } else {
+                typeIcon = '<span class="field-type-icon bg-gray-100 text-gray-800"><i class="fa fa-font"></i></span>';
+            }
+            
+            item.innerHTML = `
+                <div class="flex items-center">
+                    ${typeIcon}
+                    <span>${col}</span>
+                </div>
+                <button class="text-gray-400 hover:text-danger" onclick="removeDimension('${col}', '${dimensionType}')">
+                    <i class="fa fa-times"></i>
+                </button>
+            `;
+            
+            return item;
+        }
+
+        // 拖放字段到维度区域
+        function dropField(event, dimensionType) {
+            event.preventDefault();
+            const field = event.dataTransfer.getData('text/plain');
+            
+            // 检查是否为有效的字段
+            if (!columns.includes(field)) return;
+            
+            // 检查是否已在其他维度中
+            if (dimensionType === 'row' && !rowDimensions.includes(field) && !valueDimensions.includes(field)) {
+                rowDimensions.push(field);
+            } else if (dimensionType === 'value') {
+                // 检查是否为数值类型
+                if (columnTypes[field] !== 'number') {
+                    showNotification('错误', '值维度只能添加数值类型的字段', 'error');
+                    return;
+                }
+                
+                if (!valueDimensions.includes(field) && !rowDimensions.includes(field)) {
+                    valueDimensions.push(field);
+                }
+            }
+            
+            // 更新UI
+            renderAvailableFields();
+            renderDimensions();
+            
+            // 如果两个维度都有数据，更新透视分析
+            if (rowDimensions.length > 0 && valueDimensions.length > 0) {
+                updatePivotAnalysis();
+            }
+        }
+
+        // 高亮维度区域
+        function highlightDimensionArea(dimensionType, highlight) {
+            const container = dimensionType === 'row' ? rowDimensionsContainer : valueDimensionsContainer;
+            
+            if (highlight) {
+                container.classList.add('dimension-area-active');
+            } else {
+                container.classList.remove('dimension-area-active');
+            }
+        }
+
+        // 移除维度
+        function removeDimension(field, dimensionType) {
+            if (dimensionType === 'row') {
+                rowDimensions = rowDimensions.filter(col => col !== field);
+            } else {
+                valueDimensions = valueDimensions.filter(col => col !== field);
+            }
+            
+            // 更新UI
+            renderAvailableFields();
+            renderDimensions();
+            
+            // 如果移除后仍有数据，更新透视分析
+            if (rowDimensions.length > 0 && valueDimensions.length > 0) {
+                updatePivotAnalysis();
+            } else {
+                // 清除图表和透视表
+                if (pivotChartInstance) {
+                    pivotChartInstance.destroy();
+                    pivotChartInstance = null;
+                }
+                pivotTable.innerHTML = `
+                    <thead>
+                        <tr class="bg-gray-50">
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="100%" class="text-center py-8 text-gray-400">
+                                配置维度后显示透视表数据
+                            </td>
+                        </tr>
+                    </tbody>
+                `;
+                chartPlaceholder.style.display = 'flex';
+            }
+        }
+
+        // 清除所有维度
+        function clearDimensions() {
+            rowDimensions = [];
+            valueDimensions = [];
+            
+            // 更新UI
+            renderAvailableFields();
+            renderDimensions();
+            
+            // 清除图表和透视表
+            if (pivotChartInstance) {
+                pivotChartInstance.destroy();
+                pivotChartInstance = null;
+            }
+            pivotTable.innerHTML = `
+                <thead>
+                    <tr class="bg-gray-50">
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="100%" class="text-center py-8 text-gray-400">
+                            配置维度后显示透视表数据
+                        </td>
+                    </tr>
+                </tbody>
+            `;
+            chartPlaceholder.style.display = 'flex';
+        }
+
+        // 更新透视分析
+        function updatePivotAnalysis() {
+            if (rowDimensions.length === 0 || valueDimensions.length === 0) return;
+            
+            // 生成透视表数据
+            generatePivotData();
+            
+            // 渲染透视表
+            renderPivotTable();
+            
+            // 生成图表
+            generatePivotChart();
+            
+            // 更新按钮状态
+            exportChartBtn.disabled = false;
+        }
+
+        // 生成透视表数据
+        function generatePivotData() {
+            // 按行维度分组
+            const groups = {};
+            
+            currentData.forEach(row => {
+                // 创建组键（组合所有行维度的值）
+                const groupKeyParts = rowDimensions.map(dim => row[dim] || '空值');
+                const groupKey = groupKeyParts.join('|||');
+                
+                // 初始化组
+                if (!groups[groupKey]) {
+                    groups[groupKey] = {
+                        keys: groupKeyParts,
+                        values: {}
+                    };
+                    
+                    // 初始化值维度
+                    valueDimensions.forEach(dim => {
+                        groups[groupKey].values[dim] = {
+                            sum: 0,
+                            count: 0,
+                            avg: 0,
+                            max: null,
+                            min: null,
+                            total: 0
+                        };
+                    });
+                }
+                
+                // 更新值维度的聚合数据
+                valueDimensions.forEach(dim => {
+                    const value = parseFloat(row[dim]);
+                    if (!isNaN(value)) {
+                        const stats = groups[groupKey].values[dim];
+                        stats.sum += value;
+                        stats.count++;
+                        stats.total += value;
+                        
+                        if (stats.max === null || value > stats.max) {
+                            stats.max = value;
+                        }
+                        
+                        if (stats.min === null || value < stats.min) {
+                            stats.min = value;
+                        }
+                    }
+                });
+            });
+            
+            // 计算平均值
+            Object.values(groups).forEach(group => {
+                valueDimensions.forEach(dim => {
+                    const stats = group.values[dim];
+                    stats.avg = stats.count > 0 ? stats.sum / stats.count : 0;
+                });
+            });
+            
+            // 转换为数组格式
+            pivotRows = Object.values(groups).sort((a, b) => {
+                // 按行维度排序
+                for (let i = 0; i < rowDimensions.length; i++) {
+                    if (a.keys[i] < b.keys[i]) return -1;
+                    if (a.keys[i] > b.keys[i]) return 1;
+                }
+                return 0;
+            });
+            
+            // 透视表列名（行维度 + 值维度）
+            pivotColumns = [...rowDimensions, ...valueDimensions];
+        }
+
+        // 渲染透视表
+        function renderPivotTable() {
+            const thead = pivotTable.querySelector('thead');
+            const tbody = pivotTable.querySelector('tbody');
+            
+            // 清空表格
+            thead.innerHTML = '';
+            tbody.innerHTML = '';
+            
+            // 创建表头
+            const headerRow = document.createElement('tr');
+            headerRow.className = 'bg-gray-50';
+            
+            // 添加行维度表头
+            rowDimensions.forEach(dim => {
+                const th = document.createElement('th');
+                th.textContent = dim;
+                th.className = 'px-4 py-2 text-left border-b border-gray-200 font-medium text-gray-700';
+                headerRow.appendChild(th);
+            });
+            
+            // 添加值维度表头（带聚合方式）
+            valueDimensions.forEach(dim => {
+                const th = document.createElement('th');
+                const aggText = currentAggregation === 'sum' ? '求和' : 
+                                currentAggregation === 'average' ? '平均值' :
+                                currentAggregation === 'count' ? '计数' :
+                                currentAggregation === 'max' ? '最大值' : '最小值';
+                th.textContent = `${dim} (${aggText})`;
+                th.className = 'px-4 py-2 text-left border-b border-gray-200 font-medium text-gray-700';
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            
+            // 创建表体
+            pivotRows.forEach((group, rowIndex) => {
+                const tr = document.createElement('tr');
+                tr.className = rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                
+                // 添加行维度值
+                group.keys.forEach(key => {
+                    const td = document.createElement('td');
+                    td.textContent = key;
+                    td.className = 'px-4 py-2 border-b border-gray-200 text-sm';
+                    tr.appendChild(td);
+                });
+                
+                // 添加值维度聚合结果
+                valueDimensions.forEach(dim => {
+                    const td = document.createElement('td');
+                    const stats = group.values[dim];
+                    
+                    let value;
+                    switch (currentAggregation) {
+                        case 'sum':
+                            value = stats.sum.toFixed(2);
+                            break;
+                        case 'average':
+                            value = stats.avg.toFixed(2);
+                            break;
+                        case 'count':
+                            value = stats.count;
+                            break;
+                        case 'max':
+                            value = stats.max !== null ? stats.max.toFixed(2) : '-';
+                            break;
+                        case 'min':
+                            value = stats.min !== null ? stats.min.toFixed(2) : '-';
+                            break;
+                        default:
+                            value = '-';
+                    }
+                    
+                    td.textContent = value;
+                    td.className = 'px-4 py-2 border-b border-gray-200 text-sm';
+                    tr.appendChild(td);
+                });
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 生成透视图表
+        function generatePivotChart() {
+            // 隐藏占位符
+            chartPlaceholder.style.display = 'none';
+            
+            // 销毁现有图表
+            if (pivotChartInstance) {
+                pivotChartInstance.destroy();
+            }
+            
+            // 准备图表数据
+            const labels = pivotRows.map(group => group.keys.join(' - '));
+            const datasets = valueDimensions.map((dim, index) => {
+                // 为不同的数据集生成不同的颜色
+                const hue = (index * 137) % 360; // 使用黄金角分配色调，确保颜色多样性
+                const bgColor = `hsla(${hue}, 70%, 60%, 0.6)`;
+                const borderColor = `hsla(${hue}, 70%, 50%, 1)`;
+                
+                return {
+                    label: dim,
+                    data: pivotRows.map(group => {
+                        const stats = group.values[dim];
+                        switch (currentAggregation) {
+                            case 'sum':
+                                return stats.sum;
+                            case 'average':
+                                return stats.avg;
+                            case 'count':
+                                return stats.count;
+                            case 'max':
+                                return stats.max !== null ? stats.max : 0;
+                            case 'min':
+                                return stats.min !== null ? stats.min : 0;
+                            default:
+                                return 0;
+                        }
+                    }),
+                    backgroundColor: bgColor,
+                    borderColor: borderColor,
+                    borderWidth: 1
+                };
+            });
+            
+            // 特殊处理饼图和环形图（只支持单个数据集）
+            if (pivotChartType === 'pie' || pivotChartType === 'doughnut') {
+                // 如果有多个值维度，只显示第一个
+                if (datasets.length > 1) {
+                    showNotification('提示', `饼图和环形图只支持单个值维度，已显示第一个维度"${valueDimensions[0]}"的数据`, 'info');
+                    datasets.splice(1);
+                }
+            }
+            
+            // 创建新图表
+            const ctx = pivotChart.getContext('2d');
+            pivotChartInstance = new Chart(ctx, {
+                type: pivotChartType,
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `按${rowDimensions.join('、')}${currentAggregation === 'sum' ? '求和' : 
+                                currentAggregation === 'average' ? '求平均值' :
+                                currentAggregation === 'count' ? '计数' :
+                                currentAggregation === 'max' ? '求最大值' : '求最小值'}`,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'right'
+                        }
+                    },
+                    scales: (pivotChartType !== 'pie' && pivotChartType !== 'doughnut' && 
+                             pivotChartType !== 'polarArea' && pivotChartType !== 'radar') ? {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: currentAggregation === 'sum' ? '总和' : 
+                                      currentAggregation === 'average' ? '平均值' :
+                                      currentAggregation === 'count' ? '数量' :
+                                      currentAggregation === 'max' ? '最大值' : '最小值'
+                            }
+                        }
+                    } : {}
+                }
+            });
+        }
+
+        // 导出图表为PNG
+        function exportChartAsPNG() {
+            if (!pivotChartInstance) return;
+            
+            html2canvas(pivotChart).then(canvas => {
+                const link = document.createElement('a');
+                link.download = '图表.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showNotification('成功', '图表已导出为PNG', 'success');
             });
         }
     </script>
