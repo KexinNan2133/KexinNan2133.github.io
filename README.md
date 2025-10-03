@@ -25,7 +25,7 @@
 
 ## 在线访问
 直接通过GitHub Pages访问：  
-👉 [https://kexinnan2133.github.io/仓库名](https://kexinnan2133.github.io/)  
+👉 [https://kexinnan2133.github.io/](https://kexinnan2133.github.io/)  
 
 ## 快速开始
 ### 1. 环境要求
