@@ -442,6 +442,7 @@
 
   <script>
     // Supabase 配置 - 使用提供的项目信息
+    // 正确的 Supabase 初始化代码（需放在所有使用 supabase 的代码之前）
     const supabaseUrl = "https://czjcvwsalxftsxomfiyf.supabase.co";
     const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6amN2d3NhbHhmdHN4b21maXlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NzYwMDMsImV4cCI6MjA3NTA1MjAwM30.KowEk4M6Ykl8q21DxsT9dKOgmwy0Hlg3cabD6tr3Q8k";
     const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
