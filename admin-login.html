@@ -528,7 +528,7 @@
       
       try {
         // 验证验证码
-        const { data: verifyCode, error: codeError } = await supabase
+        const { data: verifyCode, error: codeError } = await supabaseClient
           .from('verify_codes')
           .select('code, expire_at')
           .eq('target', username)
