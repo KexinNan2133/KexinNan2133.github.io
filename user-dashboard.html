@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户中心 - 线上交流平台</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+      color: #1c1e21;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* 顶部导航栏 */
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .navbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    
+    .logo-icon {
+      color: #165dff;
+      font-size: 1.5rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #165dff;
+    }
+    
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .nav-link {
+      color: #4b4f56;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.2s;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: #165dff;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .notification-btn {
+      background: none;
+      border: none;
+      color: #4b4f56;
+      cursor: pointer;
+      position: relative;
+      font-size: 1.25rem;
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 16px;
+      height: 16px;
+      background-color: #f53f3f;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #4b4f56;
+      overflow: hidden;
+    }
+    
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .username {
+      font-weight: 500;
+    }
+    
+    /* 主内容区 */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .sidebar {
+      width: 260px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      flex-shrink: 0;
+    }
+    
+    .profile-card {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #4b4f56;
+      margin: 0 auto 1rem;
+      overflow: hidden;
+    }
+    
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .profile-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .profile-status {
+      font-size: 0.875rem;
+      color: #00b42a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    
+    .profile-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .menu-item {
+      margin-bottom: 0.25rem;
+    }
+    
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: #4b4f56;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .menu-link:hover, .menu-link.active {
+      background-color: #f0f2f5;
+      color: #165dff;
+    }
+    
+    .menu-icon {
+      width: 1.25rem;
+      text-align: center;
+    }
+    
+    .main-content {
+      flex: 1;
+    }
+    
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 1.25rem;
+    }
+    
+    .stat-title {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-change {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .change-up {
+      color: #00b42a;
+    }
+    
+    .change-down {
+      color: #f53f3f;
+    }
+    
+    .card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .btn-primary {
+      background-color: #165dff;
+      color: #ffffff;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0e4cca;
+    }
+    
+    .btn-secondary {
+      background-color: #f0f2f5;
+      color: #1c1e21;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e4e6eb;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .recent-chats {
+      list-style: none;
+    }
+    
+    .chat-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #f0f2f5;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .chat-item:hover {
+      background-color: #f9fafb;
+    }
+    
+    .chat-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #4b4f56;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .chat-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.25rem;
+    }
+    
+    .chat-name {
+      font-weight: 500;
+    }
+    
+    .chat-time {
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    
+    .chat-message {
+      font-size: 0.875rem;
+      color: #6b7280;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .badge-primary {
+      background-color: #165dff;
+      color: white;
+    }
+    
+    /* 响应式样式 */
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+      }
+      
+      .nav-menu span {
+        display: none;
+      }
+      
+      .nav-menu {
+        gap: 1rem;
+      }
+    }
+    
+    /* 模态框样式 */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    
+    .modal-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal {
+      background-color: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+    
+    .modal-backdrop.show .modal {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #6b7280;
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #f0f2f5;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    
+    /* 表单样式 */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #dddfe2;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #165dff;
+      box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.2);
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      color: #6b7280;
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+    
+    .back-link:hover {
+      color: #165dff;
+    }
+    
+    .back-link i {
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="user-dashboard.html" class="logo">
+        <i class="fas fa-comments logo-icon"></i>
+        <span class="logo-text">交流平台</span>
+      </a>
+      
+      <div class="nav-menu">
+        <a href="user-dashboard.html" class="nav-link active">
+          <i class="fas fa-home"></i>
+          <span>首页</span>
+        </a>
+        <a href="chat-list.html" class="nav-link">
+          <i class="fas fa-comments"></i>
+          <span>消息</span>
+        </a>
+        <a href="contacts.html" class="nav-link">
+          <i class="fas fa-address-book"></i>
+          <span>联系人</span>
+        </a>
+        <a href="discover.html" class="nav-link">
+          <i class="fas fa-compass"></i>
+          <span>发现</span>
+        </a>
+      </div>
+      
+      <div class="user-menu">
+        <button class="notification-btn">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        
+        <div class="user-profile" id="userProfileBtn">
+          <div class="avatar">
+            <img src="" alt="用户头像" id="avatarImg">
+            <span id="avatarInitial">U</span>
+          </div>
+          <span class="username" id="username">用户名</span>
+          <i class="fas fa-chevron-down" style="font-size: 0.75rem; color: #6b7280;"></i>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主内容区 -->
+  <div class="main-container">
+    <!-- 侧边栏 -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img src="" alt="用户头像" id="profileAvatarImg">
+          <span id="profileAvatarInitial">U</span>
+        </div>
+        <h3 class="profile-name" id="profileName">用户名</h3>
+        <div class="profile-status">
+          <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+          <span>在线</span>
+        </div>
+        <div class="profile-actions">
+          <button class="btn btn-primary" id="editProfileBtn">
+            <i class="fas fa-edit"></i> 编辑资料
+          </button>
+        </div>
+      </div>
+      
+      <ul class="sidebar-menu">
+        <li class="menu-item">
+          <a href="user-dashboard.html" class="menu-link active">
+            <i class="fas fa-tachometer-alt menu-icon"></i>
+            <span>个人中心</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="chat-list.html" class="menu-link">
+            <i class="fas fa-comments menu-icon"></i>
+            <span>我的消息</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="contacts.html" class="menu-link">
+            <i class="fas fa-address-book menu-icon"></i>
+            <span>联系人</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="favorite.html" class="menu-link">
+            <i class="fas fa-star menu-icon"></i>
+            <span>收藏内容</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="settings.html" class="menu-link">
+            <i class="fas fa-cog menu-icon"></i>
+            <span>设置</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link" id="logoutBtn">
+            <i class="fas fa-sign-out-alt menu-icon"></i>
+            <span>退出登录</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+    
+    <!-- 主内容 -->
+    <div class="main-content">
+      <h1 class="page-title">个人中心</h1>
+      
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-title">好友数量</div>
+          <div class="stat-value" id="friendCount">0</div>
+          <div class="stat-change change-up">
+            <i class="fas fa-arrow-up"></i>
+            <span>较上月增长 12%</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-title">未读消息</div>
+          <div class="stat-value" id="unreadCount">0</div>
+          <div class="stat-change change-up">
+            <i class="fas fa-arrow-up"></i>
+            <span>3条新消息</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-title">活跃天数</div>
+          <div class="stat-value" id="activeDays">0</div>
+          <div class="stat-change change-down">
+            <i class="fas fa-arrow-down"></i>
+            <span>较上周减少 2天</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">最近聊天</h2>
+          <div class="card-actions">
+            <button class="btn btn-primary" id="newChatBtn">
+              <i class="fas fa-plus"></i> 发起聊天
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="recent-chats" id="recentChatsList">
+            <!-- 最近聊天列表将通过JS动态生成 -->
+          </ul>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">推荐联系人</h2>
+          <div class="card-actions">
+            <button class="btn btn-secondary">
+              <i class="fas fa-sync-alt"></i> 刷新
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="recent-chats" id="recommendedContactsList">
+            <!-- 推荐联系人列表将通过JS动态生成 -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 编辑资料模态框 -->
+  <div class="modal-backdrop" id="editProfileModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">编辑个人资料</h3>
+        <button class="modal-close" id="closeEditProfileModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label for="editUsername" class="form-label">用户名</label>
+            <input type="text" id="editUsername" class="form-input" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="editBio" class="form-label">个人简介</label>
+            <textarea id="editBio" class="form-input" rows="3" placeholder="请输入个人简介"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="editAvatar" class="form-label">更换头像</label>
+            <input type="file" id="editAvatar" class="form-input" accept="image/*">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelEditProfileBtn">取消</button>
+        <button class="btn btn-primary" id="saveProfileBtn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Supabase 配置
+    const supabaseUrl = "YOUR_SUPABASE_URL";
+    const supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY";
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    
+    // DOM 元素
+    const usernameEl = document.getElementById('username');
+    const profileNameEl = document.getElementById('profileName');
+    const avatarImgEl = document.getElementById('avatarImg');
+    const profileAvatarImgEl = document.getElementById('profileAvatarImg');
+    const avatarInitialEl = document.getElementById('avatarInitial');
+    const profileAvatarInitialEl = document.getElementById('profileAvatarInitial');
+    const friendCountEl = document.getElementById('friendCount');
+    const unreadCountEl = document.getElementById('unreadCount');
+    const activeDaysEl = document.getElementById('activeDays');
+    const recentChatsListEl = document.getElementById('recentChatsList');
+    const recommendedContactsListEl = document.getElementById('recommendedContactsList');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const closeEditProfileModal = document.getElementById('closeEditProfileModal');
+    const cancelEditProfileModal = document.getElementById('cancelEditProfileBtn');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    const editUsernameEl = document.getElementById('editUsername');
+    const newChatBtn = document.getElementById('newChatBtn');
+    
+    // 获取当前用户信息
+    async function getCurrentUser() {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError || !session) {
+          // 未登录，跳转到登录页
+          window.location.href = 'index.html';
+          return null;
+        }
+        
+        // 获取用户资料
+        const { data: userProfile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+          
+        if (profileError || !userProfile) {
+          console.error('获取用户资料失败:', profileError);
+          return null;
+        }
+        
+        return {
+          id: session.user.id,
+          ...userProfile
+        };
+      } catch (err) {
+        console.error('获取用户信息错误:', err);
+        return null;
+      }
+    }
+    
+    // 加载用户信息
+    async function loadUserInfo() {
+      const user = await getCurrentUser();
+      
+      if (!user) {
+        return;
+      }
+      
+      // 更新页面显示
+      usernameEl.textContent = user.username || '用户';
+      profileNameEl.textContent = user.username || '用户';
+      editUsernameEl.value = user.username || '';
+      
+      // 设置头像
+      if (user.avatar_url) {
+        avatarImgEl.src = user.avatar_url;
+        profileAvatarImgEl.src = user.avatar_url;
+        avatarImgEl.style.display = 'block';
+        profileAvatarImgEl.style.display = 'block';
+        avatarInitialEl.style.display = 'none';
+        profileAvatarInitialEl.style.display = 'none';
+      } else {
+        // 使用用户名首字母作为默认头像
+        const initial = (user.username || '用')[0].toUpperCase();
+        avatarInitialEl.textContent = initial;
+        profileAvatarInitialEl.textContent = initial;
+        avatarImgEl.style.display = 'none';
+        profileAvatarImgEl.style.display = 'none';
+        avatarInitialEl.style.display = 'block';
+        profileAvatarInitialEl.style.display = 'block';
+      }
+      
+      // 加载用户统计数据
+      loadUserStats(user.id);
+      
+      // 加载最近聊天
+      loadRecentChats(user.id);
+      
+      // 加载推荐联系人
+      loadRecommendedContacts(user.id);
+    }
+    
+    // 加载用户统计数据
+    async function loadUserStats(userId) {
+      try {
+        // 模拟数据，实际应用中应从数据库获取
+        friendCountEl.textContent = Math.floor(Math.random() * 50) + 5;
+        unreadCountEl.textContent = Math.floor(Math.random() * 10);
+        activeDaysEl.textContent = Math.floor(Math.random() * 30) + 1;
+      } catch (err) {
+        console.error('加载用户统计数据错误:', err);
+      }
+    }
+    
+    // 加载最近聊天
+    async function loadRecentChats(userId) {
+      try {
+        // 模拟数据，实际应用中应从数据库获取
+        const recentChats = [
+          {
+            id: 'chat1',
+            friendId: 'user2',
+            friendName: '张三',
+            friendAvatar: '',
+            lastMessage: '明天一起去看电影吗？',
+            lastTime: '10:23',
+            unread: 2
+          },
+          {
+            id: 'chat2',
+            friendId: 'user3',
+            friendName: '李四',
+            friendAvatar: '',
+            lastMessage: '项目文档已经发送给你了',
+            lastTime: '昨天',
+            unread: 0
+          },
+          {
+            id: 'chat3',
+            friendId: 'user4',
+            friendName: '王五',
+            friendAvatar: '',
+            lastMessage: '好的，我知道了',
+            lastTime: '08-15',
+            unread: 1
+          }
+        ];
+        
+        // 清空列表
+        recentChatsListEl.innerHTML = '';
+        
+        // 添加聊天项
+        recentChats.forEach(chat => {
+          const initial = chat.friendName[0].toUpperCase();
+          const chatItem = document.createElement('li');
+          chatItem.className = 'chat-item';
+          chatItem.innerHTML = `
+            <div class="chat-avatar">
+              ${chat.friendAvatar ? `<img src="${chat.friendAvatar}" alt="${chat.friendName}">` : `<span>${initial}</span>`}
+            </div>
+            <div class="chat-info">
+              <div class="chat-header">
+                <span class="chat-name">${chat.friendName}</span>
+                <span class="chat-time">${chat.lastTime}</span>
+              </div>
+              <div class="chat-message">
+                ${chat.unread > 0 ? `<span class="badge badge-primary">${chat.unread}</span> ` : ''}
+                ${chat.lastMessage}
+              </div>
+            </div>
+          `;
+          
+          // 添加点击事件，跳转到聊天页面
+          chatItem.addEventListener('click', () => {
+            window.location.href = `chat.html?chatId=${chat.id}&friendId=${chat.friendId}&friendName=${encodeURIComponent(chat.friendName)}`;
+          });
+          
+          recentChatsListEl.appendChild(chatItem);
+        });
+      } catch (err) {
+        console.error('加载最近聊天错误:', err);
+      }
+    }
+    
+    // 加载推荐联系人
+    async function loadRecommendedContacts(userId) {
+      try {
+        // 模拟数据，实际应用中应从数据库获取
+        const contacts = [
+          {
+            id: 'user5',
+            name: '赵六',
+            avatar: '',
+            mutualFriends: 5,
+            department: '产品部'
+          },
+          {
+            id: 'user6',
+            name: '孙七',
+            avatar: '',
+            mutualFriends: 2,
+            department: '技术部'
+          },
+          {
+            id: 'user7',
+            name: '周八',
+            avatar: '',
+            mutualFriends: 8,
+            department: '市场部'
+          }
+        ];
+        
+        // 清空列表
+        recommendedContactsListEl.innerHTML = '';
+        
+        // 添加联系人项
+        contacts.forEach(contact => {
+          const initial = contact.name[0].toUpperCase();
+          const contactItem = document.createElement('li');
+          contactItem.className = 'chat-item';
+          contactItem.innerHTML = `
+            <div class="chat-avatar">
+              ${contact.avatar ? `<img src="${contact.avatar}" alt="${contact.name}">` : `<span>${initial}</span>`}
+            </div>
+            <div class="chat-info">
+              <div class="chat-header">
+                <span class="chat-name">${contact.name}</span>
+                <button class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;">
+                  <i class="fas fa-plus"></i> 添加
+                </button>
+              </div>
+              <div class="chat-message">
+                ${contact.department} · ${contact.mutualFriends}个共同好友
+              </div>
+            </div>
+          `;
+          
+          recommendedContactsListEl.appendChild(contactItem);
+        });
+      } catch (err) {
+        console.error('加载推荐联系人错误:', err);
+      }
+    }
+    
+    // 退出登录
+    logoutBtn.addEventListener('click', async () => {
+      if (confirm('确定要退出登录吗？')) {
+        try {
+          // 获取当前用户ID
+          const user = await getCurrentUser();
+          
+          if (user) {
+            // 记录退出日志
+            await supabase
+              .from('user_operation_logs')
+              .insert([{
+                user_id: user.id,
+                operation_type: 'logout',
+                operation_content: {
+                  logout_time: new Date().toISOString()
+                }
+              }]);
+          }
+          
+          // 执行退出登录
+          const { error } = await supabase.auth.signOut();
+          
+          if (error) throw error;
+          
+          // 跳转到登录页
+          window.location.href = 'index.html';
+          
+        } catch (err) {
+          console.error('退出登录错误:', err);
+          alert('退出登录失败，请重试');
+        }
+      }
+    });
+    
+    // 编辑资料模态框控制
+    editProfileBtn.addEventListener('click', () => {
+      editProfileModal.classList.add('show');
+    });
+    
+    closeEditProfileModal.addEventListener('click', () => {
+      editProfileModal.classList.remove('show');
+    });
+    
+    cancelEditProfileModal.addEventListener('click', () => {
+      editProfileModal.classList.remove('show');
+    });
+    
+    // 点击模态框背景关闭
+    editProfileModal.addEventListener('click', (e) => {
+      if (e.target === editProfileModal) {
+        editProfileModal.classList.remove('show');
+      }
+    });
+    
+    // 保存个人资料
+    saveProfileBtn.addEventListener('click', async () => {
+      try {
+        const user = await getCurrentUser();
+        
+        if (!user) {
+          return;
+        }
+        
+        const newUsername = editUsernameEl.value.trim();
+        
+        if (!newUsername || newUsername.length < 2) {
+          alert('用户名长度不能少于2个字符');
+          return;
+        }
+        
+        // 更新用户资料
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            username: newUsername,
+            updated_at: new Date()
+          })
+          .eq('id', user.id);
+          
+        if (error) throw error;
+        
+        // 刷新页面显示
+        usernameEl.textContent = newUsername;
+        profileNameEl.textContent = newUsername;
+        
+        // 关闭模态框
+        editProfileModal.classList.remove('show');
+        
+        // 显示成功提示
+        alert('个人资料更新成功');
+        
+      } catch (err) {
+        console.error('更新个人资料错误:', err);
+        alert('更新个人资料失败，请重试');
+      }
+    });
+    
+    // 新建聊天按钮
+    newChatBtn.addEventListener('click', () => {
+      window.location.href = 'contacts.html';
+    });
+    
+    // 页面加载时执行
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserInfo();
+    });
+  </script>
+</body>
+</html>
+    
