@@ -29,11 +29,16 @@
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'glow': 'glow 2s ease-in-out infinite alternate',
+                        'scan': 'scan 2s linear infinite',
                     },
                     keyframes: {
                         glow: {
                             '0%': { 'box-shadow': '0 0 5px rgba(108, 92, 231, 0.5), 0 0 10px rgba(108, 92, 231, 0.3)' },
                             '100%': { 'box-shadow': '0 0 10px rgba(108, 92, 231, 0.8), 0 0 20px rgba(108, 92, 231, 0.5), 0 0 30px rgba(108, 92, 231, 0.3)' }
+                        },
+                        scan: {
+                            '0%': { 'background-position': '0% 0%' },
+                            '100%': { 'background-position': '0% 100%' }
                         }
                     }
                 }
@@ -75,6 +80,26 @@
             }
             .input-field {
                 @apply w-full px-4 py-3 rounded-lg bg-darker border border-primary/50 text-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all duration-200;
+            }
+            .upload-progress {
+                height: 4px;
+                background: linear-gradient(to bottom, rgba(108, 92, 231, 0.3) 0%, rgba(108, 92, 231, 0.1) 100%);
+                overflow: hidden;
+                position: relative;
+            }
+            .upload-progress-bar {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background: linear-gradient(90deg, rgba(108, 92, 231, 0.8), rgba(0, 240, 255, 0.8));
+                transition: width 0.3s ease;
+                background-size: 100% 200%;
+                animation: scan 2s linear infinite;
+            }
+            .file-preview {
+                max-height: 200px;
+                object-fit: contain;
             }
         }
     </style>
@@ -139,6 +164,42 @@
                             </div>
                         </div>
                         
+                        <!-- 文件上传区域 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">附加文件</label>
+                            <div id="dropArea" class="border-2 border-dashed border-primary/30 rounded-lg p-4 text-center hover:border-primary/70 transition-colors cursor-pointer">
+                                <input type="file" id="fileInput" class="hidden" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt">
+                                <div class="space-y-2">
+                                    <i class="fa fa-cloud-upload text-2xl text-secondary"></i>
+                                    <p class="text-sm">拖放文件到此处或<span class="text-secondary">点击上传</span></p>
+                                    <p class="text-xs text-gray-500">支持图片、文档和文本文件 (最大 10MB)</p>
+                                </div>
+                                
+                                <!-- 上传进度条 (默认隐藏) -->
+                                <div id="uploadProgressContainer" class="hidden mt-4">
+                                    <div class="upload-progress rounded-full">
+                                        <div id="uploadProgressBar" class="upload-progress-bar" style="width: 0%"></div>
+                                    </div>
+                                    <p id="uploadStatus" class="text-xs text-gray-500 mt-1">准备上传...</p>
+                                </div>
+                                
+                                <!-- 文件预览区域 (默认隐藏) -->
+                                <div id="filePreviewContainer" class="hidden mt-4 space-y-2">
+                                    <div class="flex items-center p-2 bg-dark rounded-lg">
+                                        <i id="previewFileIcon" class="fa fa-file-o text-primary mr-3"></i>
+                                        <div class="flex-grow">
+                                            <p id="previewFileName" class="text-sm truncate"></p>
+                                            <p id="previewFileSize" class="text-xs text-gray-500"></p>
+                                        </div>
+                                        <button type="button" id="removeFileBtn" class="text-gray-400 hover:text-accent transition-colors">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <img id="previewImage" class="file-preview w-full rounded-lg hidden" alt="文件预览">
+                                </div>
+                            </div>
+                        </div>
+                        
                         <button type="submit" class="btn-primary w-full flex justify-center items-center">
                             <i class="fa fa-paper-plane mr-2"></i> 发送
                         </button>
@@ -185,7 +246,7 @@
     <footer class="bg-darker/80 backdrop-blur-md border-t border-primary/30 mt-12 py-6">
         <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
             <p>星际通讯协议 &copy; 2023 | 基于Supabase量子存储技术</p>
-            <p class="mt-1 text-xs">信号强度: <span class="text-green-400">98.7%</span> | 延迟: <span class="text-secondary">0.42ms</span></p>
+            <p class="mt-1 text-xs">信号强度: <span class="text-green-400">98.7%</span> | 延迟: <span class="text-secondary">0.42ms</span> | 存储容量: <span class="text-accent">87%</span></p>
         </div>
     </footer>
 
@@ -200,6 +261,28 @@
     <div id="successToast" class="hidden fixed top-4 right-4 bg-primary/20 border border-primary text-primary px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full">
         <i class="fa fa-check-circle mr-2"></i>
         <span id="toastMessage">操作成功！</span>
+    </div>
+
+    <!-- 文件查看器模态框 (默认隐藏) -->
+    <div id="fileViewerModal" class="hidden fixed inset-0 bg-darker/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-dark border border-primary/30 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-primary/20 flex justify-between items-center">
+                <h3 id="modalFileName" class="text-secondary font-medium"></h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-accent transition-colors p-2">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="flex-grow p-4 overflow-auto flex items-center justify-center">
+                <img id="modalImage" class="max-w-full max-h-[70vh] object-contain" alt="文件预览">
+                <div id="nonImageFileMessage" class="text-center hidden">
+                    <i class="fa fa-file-text-o text-5xl text-primary mb-4"></i>
+                    <p id="nonImageFileText" class="text-gray-400"></p>
+                    <a id="downloadFileLink" href="#" target="_blank" class="btn-primary mt-4 inline-flex items-center">
+                        <i class="fa fa-download mr-2"></i> 下载文件
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -218,7 +301,33 @@
         const filterSelect = document.getElementById('filterSelect');
         const themeToggle = document.getElementById('themeToggle');
         const sortToggle = document.getElementById('sortToggle');
-
+        
+        // 文件上传相关元素
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadProgressContainer = document.getElementById('uploadProgressContainer');
+        const uploadProgressBar = document.getElementById('uploadProgressBar');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const filePreviewContainer = document.getElementById('filePreviewContainer');
+        const previewFileIcon = document.getElementById('previewFileIcon');
+        const previewFileName = document.getElementById('previewFileName');
+        const previewFileSize = document.getElementById('previewFileSize');
+        const previewImage = document.getElementById('previewImage');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        
+        // 文件查看器模态框元素
+        const fileViewerModal = document.getElementById('fileViewerModal');
+        const modalFileName = document.getElementById('modalFileName');
+        const modalImage = document.getElementById('modalImage');
+        const nonImageFileMessage = document.getElementById('nonImageFileMessage');
+        const nonImageFileText = document.getElementById('nonImageFileText');
+        const downloadFileLink = document.getElementById('downloadFileLink');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        
+        // 存储当前选中的文件
+        let selectedFile = null;
+        let uploadedFileData = null;
+        
         // 表情列表
         const emojis = ['👽', '🚀', '🌌', '🔭', '⚡', '💫', '✨', '🤖', '🔮', '👾', '🌠', '🌟', '💻', '🔗', '🕹️'];
         
@@ -277,6 +386,89 @@
             });
         }
         
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // 获取文件图标
+        function getFileIcon(fileType) {
+            if (fileType.startsWith('image/')) return 'fa-file-image-o';
+            if (fileType === 'application/pdf') return 'fa-file-pdf-o';
+            if (fileType.includes('word')) return 'fa-file-word-o';
+            if (fileType.includes('excel')) return 'fa-file-excel-o';
+            if (fileType === 'text/plain') return 'fa-file-text-o';
+            return 'fa-file-o';
+        }
+        
+        // 处理文件选择
+        function handleFileSelection(file) {
+            // 检查文件大小
+            if (file.size > 10 * 1024 * 1024) { // 10MB
+                showToast('文件过大，请选择小于10MB的文件');
+                return false;
+            }
+            
+            selectedFile = file;
+            uploadedFileData = null;
+            
+            // 更新预览
+            previewFileName.textContent = file.name;
+            previewFileSize.textContent = formatFileSize(file.size);
+            previewFileIcon.className = `fa ${getFileIcon(file.type)} text-primary mr-3`;
+            
+            // 显示图片预览（如果是图片）
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.classList.remove('hidden');
+                    previewImage.alt = file.name;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.classList.add('hidden');
+            }
+            
+            // 显示预览区域
+            filePreviewContainer.classList.remove('hidden');
+            return true;
+        }
+        
+        // 清除选中的文件
+        function clearSelectedFile() {
+            selectedFile = null;
+            uploadedFileData = null;
+            fileInput.value = '';
+            filePreviewContainer.classList.add('hidden');
+            uploadProgressContainer.classList.add('hidden');
+            previewImage.src = '';
+        }
+        
+        // 打开文件查看器
+        function openFileViewer(fileData) {
+            modalFileName.textContent = fileData.name;
+            
+            if (fileData.type.startsWith('image/')) {
+                modalImage.src = fileData.url;
+                modalImage.alt = fileData.name;
+                modalImage.classList.remove('hidden');
+                nonImageFileMessage.classList.add('hidden');
+            } else {
+                modalImage.classList.add('hidden');
+                nonImageFileMessage.classList.remove('hidden');
+                nonImageFileText.textContent = `这是一个 ${fileData.type.split('/')[1] || '文件'} 文件`;
+                downloadFileLink.href = fileData.url;
+                downloadFileLink.download = fileData.name;
+            }
+            
+            fileViewerModal.classList.remove('hidden');
+        }
+        
         // 渲染单条留言
         function renderMessage(message) {
             const messageCard = document.createElement('div');
@@ -287,6 +479,29 @@
             const colors = ['border-primary', 'border-secondary', 'border-accent'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             const firstChar = message.name.charAt(0).toUpperCase();
+            
+            // 生成文件附件HTML
+            let fileAttachmentHtml = '';
+            if (message.file) {
+                const fileIcon = getFileIcon(message.file.type);
+                fileAttachmentHtml = `
+                    <div class="mt-4 p-3 bg-dark rounded-lg border border-primary/20 flex items-center">
+                        <i class="fa ${fileIcon} text-secondary mr-3 text-xl"></i>
+                        <div class="flex-grow">
+                            <p class="text-sm">${message.file.name}</p>
+                            <p class="text-xs text-gray-500">${formatFileSize(message.file.size)} · ${message.file.type}</p>
+                        </div>
+                        <button class="view-file-btn text-primary hover:text-secondary transition-colors" 
+                                data-id="${message.id}"
+                                data-name="${message.file.name}"
+                                data-type="${message.file.type}"
+                                data-size="${message.file.size}"
+                                data-url="${message.file.url}">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                `;
+            }
             
             messageCard.innerHTML = `
                 <div class="flex items-start">
@@ -299,6 +514,9 @@
                             <span class="text-xs text-gray-500">${formatTime(message.created_at)}</span>
                         </div>
                         <p class="mt-3 text-gray-300 whitespace-pre-line">${message.content}</p>
+                        
+                        ${fileAttachmentHtml}
+                        
                         <div class="mt-4 flex items-center space-x-6">
                             <button class="like-btn flex items-center text-gray-400 hover:text-accent transition-colors" data-id="${message.id}">
                                 <i class="fa fa-heart-o mr-1"></i>
@@ -338,9 +556,9 @@
             return messageCard;
         }
         
-        // --- Supabase相关接口 (已填入你的配置) ---
+        // --- Supabase相关接口 ---
         
-        // 1. 你的Supabase配置信息
+        // 1. 配置Supabase项目信息（已填入您提供的信息）
         const supabaseUrl = 'https://scjmhhqpvxluolclbxsp.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNjam1oaHFwdnhsdW9sY2xieHNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0Njc2ODcsImV4cCI6MjA3NTA0MzY4N30.vmvQyXaUoDuPJWssRtWIdsN5q1pXKqWs2ziYgO0CYtk';
         
@@ -357,11 +575,35 @@
             }
         }
         
-        // 3. 创建必要的数据库表 (首次运行时自动执行)
-        async function createTablesIfNotExists() {
+        // 3. 创建必要的数据库表和存储桶
+        async function createTablesAndBucketIfNotExists() {
             if (!supabase) return;
             
             try {
+                // 检查并创建存储桶
+                const { data: bucketData, error: bucketError } = await supabase
+                    .storage
+                    .getBucket('message-attachments');
+                
+                if (bucketError || !bucketData) {
+                    // 创建存储桶
+                    const { error: createBucketError } = await supabase
+                        .storage
+                        .createBucket('message-attachments', {
+                            public: true,
+                            allowedMimeTypes: [
+                                'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+                                'application/pdf',
+                                'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                'text/plain'
+                            ],
+                            maxFileSize: 10 * 1024 * 1024 // 10MB
+                        });
+                    
+                    if (createBucketError) throw createBucketError;
+                }
+                
                 // 检查是否存在messages表
                 const { data: tableCheck, error: checkError } = await supabase
                     .from('information_schema.tables')
@@ -372,50 +614,46 @@
                 
                 // 如果表不存在则创建
                 if (!tableCheck || tableCheck.length === 0) {
-                    const { error: createError } = await supabase.rpc('create_messages_table');
+                    // 尝试直接创建表
+                    const { error: directCreateError } = await supabase.from('messages').insert([
+                        { 
+                            name: 'system', 
+                            content: '初始化', 
+                            likes: 0, 
+                            replies: [],
+                            file: null
+                        }
+                    ]).select();
                     
-                    if (createError && createError.code !== '42883') {
-                        // 尝试直接创建表
-                        const { error: directCreateError } = await supabase.from('messages').insert([
-                            { name: 'system', content: '初始化', likes: 0, replies: [] }
-                        ]).select();
-                        
-                        if (directCreateError) throw directCreateError;
-                    }
+                    if (directCreateError) throw directCreateError;
                 }
                 return true;
             } catch (error) {
-                console.error('数据库初始化失败:', error);
+                console.error('初始化失败:', error);
                 
-                // 尝试直接创建表结构
+                // 尝试手动创建表结构
                 try {
-                    const { error: tableError } = await supabase.from('messages').insert([
-                        { name: 'system', content: '初始化', likes: 0, replies: [] }
-                    ]).select();
-                    
-                    if (tableError) {
-                        // 手动创建表的SQL
-                        const { error: sqlError } = await supabase.rpc('exec_sql', {
-                            sql: `
-                            CREATE TABLE IF NOT EXISTS messages (
-                                id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                                name TEXT NOT NULL,
-                                content TEXT NOT NULL,
-                                likes INTEGER DEFAULT 0,
-                                replies JSONB DEFAULT '[]'::JSONB,
-                                created_at TIMESTAMPTZ DEFAULT NOW()
-                            );
-                            
-                            CREATE POLICY "允许公开读取" ON messages FOR SELECT USING (true);
-                            CREATE POLICY "允许公开写入" ON messages FOR INSERT WITH CHECK (true);
-                            CREATE POLICY "允许公开更新" ON messages FOR UPDATE USING (true);
-                            
-                            ALTER PUBLICATION supabase_realtime ADD TABLE messages;
-                            `
-                        });
+                    const { error: sqlError } = await supabase.rpc('exec_sql', {
+                        sql: `
+                        CREATE TABLE IF NOT EXISTS messages (
+                            id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                            name TEXT NOT NULL,
+                            content TEXT NOT NULL,
+                            likes INTEGER DEFAULT 0,
+                            replies JSONB DEFAULT '[]'::JSONB,
+                            file JSONB DEFAULT NULL,
+                            created_at TIMESTAMPTZ DEFAULT NOW()
+                        );
                         
-                        if (sqlError) throw sqlError;
-                    }
+                        CREATE POLICY "允许公开读取" ON messages FOR SELECT USING (true);
+                        CREATE POLICY "允许公开写入" ON messages FOR INSERT WITH CHECK (true);
+                        CREATE POLICY "允许公开更新" ON messages FOR UPDATE USING (true);
+                        
+                        ALTER PUBLICATION supabase_realtime ADD TABLE messages;
+                        `
+                    });
+                    
+                    if (sqlError) throw sqlError;
                     return true;
                 } catch (sqlError) {
                     console.error('手动创建表失败:', sqlError);
@@ -424,8 +662,54 @@
             }
         }
         
-        // 4. 保存留言到Supabase
-        async function saveMessageToSupabase(name, content) {
+        // 4. 上传文件到Supabase存储
+        async function uploadFileToSupabase(file) {
+            if (!supabase || !file) return { data: null, error: '参数错误' };
+            
+            try {
+                // 生成唯一文件名
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}-${file.name.replace(/\s+/g, '-')}`;
+                
+                // 上传文件
+                const { data, error } = await supabase
+                    .storage
+                    .from('message-attachments')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false,
+                        onUploadProgress: (progressEvent) => {
+                            const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                            uploadProgressBar.style.width = `${percent}%`;
+                            uploadStatus.textContent = `正在上传: ${percent}%`;
+                        }
+                    });
+                
+                if (error) throw error;
+                
+                // 获取公共URL
+                const { data: urlData } = supabase
+                    .storage
+                    .from('message-attachments')
+                    .getPublicUrl(fileName);
+                
+                return {
+                    data: {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        path: data.path,
+                        url: urlData.publicUrl
+                    },
+                    error: null
+                };
+            } catch (error) {
+                console.error('文件上传失败:', error);
+                return { data: null, error };
+            }
+        }
+        
+        // 5. 保存留言到Supabase
+        async function saveMessageToSupabase(name, content, fileData = null) {
             if (!supabase) return { error: 'Supabase未初始化' };
             
             try {
@@ -436,7 +720,8 @@
                             name: name, 
                             content: content,
                             likes: 0,
-                            replies: []
+                            replies: [],
+                            file: fileData
                         }
                     ])
                     .select();
@@ -449,7 +734,7 @@
             }
         }
         
-        // 5. 从Supabase加载留言
+        // 6. 从Supabase加载留言
         async function loadMessagesFromSupabase(order = 'created_at', ascending = false) {
             if (!supabase) return { data: null, error: 'Supabase未初始化' };
             
@@ -471,7 +756,7 @@
             }
         }
         
-        // 6. 点赞功能
+        // 7. 点赞功能
         async function likeMessageInSupabase(messageId) {
             if (!supabase) return { error: 'Supabase未初始化' };
             
@@ -501,7 +786,7 @@
             }
         }
         
-        // 7. 回复功能
+        // 8. 回复功能
         async function replyToMessageInSupabase(messageId, replyName, replyContent) {
             if (!supabase) return { error: 'Supabase未初始化' };
             
@@ -538,7 +823,7 @@
             }
         }
         
-        // 8. 设置实时监听，当数据变化时自动更新
+        // 9. 设置实时监听，当数据变化时自动更新
         function setupRealtimeUpdates() {
             if (!supabase) return;
             
@@ -629,6 +914,42 @@
             e.stopPropagation();
         });
         
+        // 文件上传相关事件
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+        
+        // 拖放事件
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('border-primary/70');
+        });
+        
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('border-primary/70');
+        });
+        
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('border-primary/70');
+            
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                handleFileSelection(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // 移除文件
+        removeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearSelectedFile();
+        });
+        
         // 表单提交
         messageForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -643,10 +964,35 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 发送中...';
                 
-                // 调用Supabase保存接口
-                const { error } = await saveMessageToSupabase(name, content);
+                let fileData = null;
+                
+                // 如果有选中的文件，先上传文件
+                if (selectedFile) {
+                    uploadProgressContainer.classList.remove('hidden');
+                    uploadProgressBar.style.width = '0%';
+                    uploadStatus.textContent = '准备上传...';
+                    
+                    const { data: uploadedData, error: uploadError } = await uploadFileToSupabase(selectedFile);
+                    
+                    if (uploadError) {
+                        showToast('文件上传失败: ' + uploadError.message);
+                        uploadProgressContainer.classList.add('hidden');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fa fa-paper-plane mr-2"></i> 发送';
+                        return;
+                    }
+                    
+                    fileData = uploadedData;
+                    uploadStatus.textContent = '文件上传完成';
+                }
+                
+                // 保存留言
+                const { error } = await saveMessageToSupabase(name, content, fileData);
                 if (error) {
                     showToast('发送失败: ' + error.message);
+                    if (selectedFile) {
+                        uploadProgressContainer.classList.add('hidden');
+                    }
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fa fa-paper-plane mr-2"></i> 发送';
                     return;
@@ -654,6 +1000,7 @@
                 
                 showToast('通讯发送成功');
                 messageContent.value = '';
+                clearSelectedFile();
                 updateCharCount();
                 
                 // 恢复按钮状态
@@ -666,10 +1013,13 @@
                 const submitBtn = messageForm.querySelector('button[type="submit"]');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fa fa-paper-plane mr-2"></i> 发送';
+                if (selectedFile) {
+                    uploadProgressContainer.classList.add('hidden');
+                }
             }
         });
         
-        // 点赞和回复按钮点击
+        // 留言列表事件委托
         messageList.addEventListener('click', async (e) => {
             // 点赞按钮
             if (e.target.closest('.like-btn')) {
@@ -762,6 +1112,30 @@
                     submitBtn.innerHTML = '发送回复';
                 }
             }
+            
+            // 查看文件
+            if (e.target.closest('.view-file-btn')) {
+                const fileBtn = e.target.closest('.view-file-btn');
+                const fileData = {
+                    name: fileBtn.dataset.name,
+                    type: fileBtn.dataset.type,
+                    size: parseInt(fileBtn.dataset.size),
+                    url: fileBtn.dataset.url
+                };
+                openFileViewer(fileData);
+            }
+        });
+        
+        // 关闭文件查看器
+        closeModalBtn.addEventListener('click', () => {
+            fileViewerModal.classList.add('hidden');
+        });
+        
+        // 点击模态框外部关闭
+        fileViewerModal.addEventListener('click', (e) => {
+            if (e.target === fileViewerModal) {
+                fileViewerModal.classList.add('hidden');
+            }
         });
         
         // 搜索和筛选
@@ -807,8 +1181,9 @@
             messageCards.forEach(card => {
                 const content = card.querySelector('p')?.textContent.toLowerCase() || '';
                 const name = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                const fileName = card.querySelector('.view-file-btn')?.dataset.name.toLowerCase() || '';
                 
-                if (content.includes(searchTerm) || name.includes(searchTerm)) {
+                if (content.includes(searchTerm) || name.includes(searchTerm) || fileName.includes(searchTerm)) {
                     card.style.display = '';
                     // 添加高亮动画
                     card.classList.add('border-secondary');
@@ -841,9 +1216,9 @@
                 return;
             }
             
-            // 创建必要的表
-            const isTablesCreated = await createTablesIfNotExists();
-            if (!isTablesCreated) {
+            // 创建必要的表和存储桶
+            const isInitialized = await createTablesAndBucketIfNotExists();
+            if (!isInitialized) {
                 messageList.innerHTML = `
                     <div class="text-center py-12 text-gray-500">
                         <i class="fa fa-database text-accent text-4xl mb-4"></i>
@@ -868,4 +1243,3 @@
     </script>
 </body>
 </html>
-    
