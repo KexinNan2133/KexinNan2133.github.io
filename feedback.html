@@ -664,25 +664,23 @@
         
         // 4. 上传文件到Supabase存储
         async function uploadFileToSupabase(file) {
-            if (!supabase || !file) return { data: null, error: '参数错误' };
-            
-            try {
-                // 生成唯一文件名
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}-${file.name.replace(/\s+/g, '-')}`;
-                
-                // 上传文件
-                const { data, error } = await supabase
-                    .storage
-                    .from('message-attachments')
-                    .upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false,
-                        onUploadProgress: (progressEvent) => {
-                            const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                            uploadProgressBar.style.width = `${percent}%`;
-                            uploadStatus.textContent = `正在上传: ${percent}%`;
-                        }
-                    });
+  if (!supabase || !file) return { data: null, error: '参数错误' };
+  try {
+    // 生成唯一文件名（避免重复）
+    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    // 关键：确保存储桶名是 "message-attachments"，路径格式正确
+    const { data, error } = await supabase
+      .storage
+      .from('message-attachments') // 存储桶名必须完全匹配
+      .upload(`public/${fileName}`, file, { // 增加public前缀，符合Supabase存储规范
+        cacheControl: '3600',
+        upsert: false,
+        onUploadProgress: (progressEvent) => {
+          const percent = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          uploadProgressBar.style.width = `${percent}%`;
+          uploadStatus.textContent = `正在上传: ${percent}%`;
+        }
+      });
                 
                 if (error) throw error;
                 
